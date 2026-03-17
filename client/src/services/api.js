@@ -2,7 +2,7 @@ import axios from "axios";
 import { clearToken, getToken } from "./auth";
 
 const API = axios.create({
-  baseURL: "/api",
+  baseURL: process.env.REACT_APP_API_URL || "/api",
   timeout: 15000,
 });
 
