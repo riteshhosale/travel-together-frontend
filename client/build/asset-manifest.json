@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.1003141a.css",
+    "main.js": "/static/js/main.7d3f8284.js",
+    "index.html": "/index.html",
+    "static/media/travelers.svg": "/static/media/travelers.deae2294de392a58e22117b23a586a8b.svg",
+    "static/media/logo-mark.svg": "/static/media/logo-mark.3ccd522e43c161c20c890e897c53c1d6.svg",
+    "static/media/countries.svg": "/static/media/countries.989f2cfc5d6b0a4c623cb7cf51e50437.svg",
+    "static/media/success.svg": "/static/media/success.58cc2a1ebd4f85529fc2ab860684a848.svg",
+    "static/media/rating.svg": "/static/media/rating.95308484348066331bad2b50f445701a.svg",
+    "main.1003141a.css.map": "/static/css/main.1003141a.css.map",
+    "main.7d3f8284.js.map": "/static/js/main.7d3f8284.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1003141a.css",
+    "static/js/main.7d3f8284.js"
+  ]
+}
