@@ -8,6 +8,7 @@ function GpsNavigator() {
   const [position, setPosition] = useState(null);
   const [error, setError] = useState("");
   const [isLocating, setIsLocating] = useState(false);
+  const [isTracking, setIsTracking] = useState(false);
 
   const hasGeolocation =
     typeof navigator !== "undefined" && "geolocation" in navigator;
@@ -66,6 +67,7 @@ function GpsNavigator() {
       },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
     );
+    setIsTracking(true);
   };
 
   const stopTracking = () => {
@@ -73,6 +75,7 @@ function GpsNavigator() {
       navigator.geolocation.clearWatch(watchIdRef.current);
       watchIdRef.current = null;
     }
+    setIsTracking(false);
   };
 
   const mapSrc = useMemo(() => {
@@ -122,12 +125,16 @@ function GpsNavigator() {
             <button
               onClick={startTracking}
               className="fg-btn-secondary text-sm"
+              disabled={isTracking}
             >
               Start Live Tracking
             </button>
             <button onClick={stopTracking} className="fg-btn-secondary text-sm">
               Stop Tracking
             </button>
+            <span className="fg-muted text-xs">
+              {isTracking ? "Live tracking on" : "Live tracking off"}
+            </span>
           </div>
 
           {error && (
