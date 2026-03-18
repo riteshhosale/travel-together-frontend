@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useSearchParams } from "react-router-dom";
-import API from "../services/api";
+import { apiFetch } from "../services/apiFetch";
 import { getToken } from "../services/auth";
 
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:5001";
@@ -77,10 +77,10 @@ function Chat() {
 
       try {
         setIsLoadingTrips(true);
-        const res = await API.get("/trips");
-        setTrips(res.data || []);
+        const data = await apiFetch("/trips");
+        setTrips(data || []);
       } catch (err) {
-        setError(err?.response?.data?.message || "Failed to load trips");
+        setError(err?.message || "Failed to load trips");
       } finally {
         setIsLoadingTrips(false);
       }
@@ -93,11 +93,11 @@ function Chat() {
     try {
       setIsLoadingMessages(true);
       setError("");
-      const res = await API.get(`/messages/${selectedTripId}`);
-      setMessages(res.data || []);
+      const data = await apiFetch(`/messages/${selectedTripId}`);
+      setMessages(data || []);
     } catch (err) {
       setMessages([]);
-      setError(err?.response?.data?.message || "Failed to load messages");
+      setError(err?.message || "Failed to load messages");
     } finally {
       setIsLoadingMessages(false);
     }
@@ -112,11 +112,13 @@ function Chat() {
 
     try {
       setError("");
-      await API.post(`/trips/join/${normalizedTripId}`);
+      await apiFetch(`/trips/join/${normalizedTripId}`, {
+        method: "POST",
+      });
     } catch (err) {
-      const status = err?.response?.status;
+      const status = err?.status;
       if (status !== 400) {
-        setError(err?.response?.data?.message || "Failed to join trip");
+        setError(err?.message || "Failed to join trip");
         return;
       }
     }

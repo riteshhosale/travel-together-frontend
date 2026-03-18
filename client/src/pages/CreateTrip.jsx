@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../services/api";
+import { apiFetch } from "../services/apiFetch";
 import { useNavigate } from "react-router-dom";
 
 function CreateTrip() {
@@ -19,14 +19,15 @@ function CreateTrip() {
     try {
       setIsSubmitting(true);
 
-      await API.post("/trips", { destination, date, budget, description });
+      await apiFetch("/trips", {
+        method: "POST",
+        body: JSON.stringify({ destination, date, budget, description }),
+      });
 
       alert("Trip created");
       navigate("/trips");
     } catch (err) {
-      const message =
-        err?.response?.data?.message || "Trip creation failed. Try again.";
-      alert(message);
+      alert(err?.message || "Trip creation failed. Try again.");
     } finally {
       setIsSubmitting(false);
     }

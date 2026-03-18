@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import API from "../services/api";
 
 function Register() {
   const navigate = useNavigate();
@@ -21,19 +20,33 @@ function Register() {
     try {
       setIsSubmitting(true);
 
-      await API.post("/auth/register", {
-        name,
-        email,
-        password,
-        location,
+      const apiBase =
+        process.env.REACT_APP_API_URL ||
+        "https://travel-together-backend.onrender.com";
+
+      const response = await fetch(`${apiBase}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          location,
+        }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Registration failed. Try again.");
+      }
 
       alert("User registered. Please login.");
       navigate("/login");
     } catch (err) {
-      const message =
-        err?.response?.data?.message || "Registration failed. Try again.";
-      alert(message);
+      alert(err?.message || "Registration failed. Try again.");
     } finally {
       setIsSubmitting(false);
     }

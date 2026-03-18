@@ -10,7 +10,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Reviews from "./pages/Reviews";
 import Trips from "./pages/Trips";
-import API from "./services/api";
+import { apiFetch } from "./services/apiFetch";
 import { isAuthenticated } from "./services/auth";
 
 function App() {
@@ -29,10 +29,10 @@ function App() {
       }
 
       try {
-        const res = await API.get("/users/profile");
+        const data = await apiFetch("/users/profile");
 
         if (isMounted) {
-          setUser(res.data || null);
+          setUser(data || null);
         }
       } catch (error) {
         if (isMounted) {
