@@ -5,6 +5,7 @@ function Trips() {
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [joiningTripId, setJoiningTripId] = useState(null);
 
   useEffect(() => {
     const loadTrips = async () => {
@@ -95,6 +96,27 @@ function Trips() {
                 <p className="fg-muted mt-4 text-sm">
                   {trip.description || "No description provided yet."}
                 </p>
+                <div className="mt-5">
+                  <button
+                    onClick={async () => {
+                      try {
+                        setJoiningTripId(trip._id);
+                        await apiFetch(`/trips/join/${trip._id}`, {
+                          method: "POST",
+                        });
+                        alert("Joined trip successfully");
+                      } catch (err) {
+                        alert(err?.message || "Failed to join trip");
+                      } finally {
+                        setJoiningTripId(null);
+                      }
+                    }}
+                    disabled={joiningTripId === trip._id}
+                    className="fg-btn-primary mt-2 text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {joiningTripId === trip._id ? "Joining..." : "Join trip"}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
