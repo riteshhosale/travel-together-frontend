@@ -1,10 +1,19 @@
 import axios from "axios";
 import { clearToken, getToken } from "./auth";
 
-const API = axios.create({
-  baseURL:
+const normalizeBase = (base) => base.replace(/\/+$/, "");
+
+const resolveBaseUrl = () => {
+  const rawBase =
     process.env.REACT_APP_API_URL ||
-    "https://travel-together-backend.onrender.com/api",
+    "https://travel-together-backend.onrender.com";
+  const base = normalizeBase(rawBase);
+
+  return base.endsWith("/api") ? base : `${base}/api`;
+};
+
+const API = axios.create({
+  baseURL: resolveBaseUrl(),
   timeout: 15000,
 });
 

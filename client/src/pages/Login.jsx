@@ -19,11 +19,13 @@ function Login() {
     try {
       setIsSubmitting(true);
 
-      const apiBase =
+      const rawBase =
         process.env.REACT_APP_API_URL ||
         "https://travel-together-backend.onrender.com";
+      const base = rawBase.replace(/\/+$/, "");
+      const apiBase = base.endsWith("/api") ? base : `${base}/api`;
 
-      const response = await fetch(`${apiBase}/api/auth/login`, {
+      const response = await fetch(`${apiBase}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

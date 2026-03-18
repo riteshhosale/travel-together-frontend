@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import { apiFetch } from "../services/apiFetch";
 
 function Reviews() {
   const [trips, setTrips] = useState([]);
@@ -17,11 +17,10 @@ function Reviews() {
       try {
         setIsLoadingTrips(true);
         setError("");
-        const res = await API.get("/trips");
-        setTrips(res.data);
+        const data = await apiFetch("/trips");
+        setTrips(data);
       } catch (err) {
-        const message = err?.response?.data?.message || "Failed to load trips";
-        setError(message);
+        setError(err?.message || "Failed to load trips");
       } finally {
         setIsLoadingTrips(false);
       }
@@ -38,11 +37,10 @@ function Reviews() {
 
     try {
       setIsLoadingReviews(true);
-      const res = await API.get(`/reviews/${tripId}`);
-      setReviews(res.data);
+      const data = await apiFetch(`/reviews/${tripId}`);
+      setReviews(data);
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to load reviews";
-      setError(message);
+      setError(err?.message || "Failed to load reviews");
     } finally {
       setIsLoadingReviews(false);
     }
@@ -61,12 +59,14 @@ function Reviews() {
 
     try {
       setIsSubmitting(true);
-      await API.post("/reviews", { tripId, rating: Number(rating), comment });
+      await apiFetch("/reviews", {
+        method: "POST",
+        body: JSON.stringify({ tripId, rating: Number(rating), comment }),
+      });
       setComment("");
       await loadReviews();
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to add review";
-      alert(message);
+      alert(err?.message || "Failed to add review");
     } finally {
       setIsSubmitting(false);
     }

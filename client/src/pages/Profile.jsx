@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import { apiFetch } from "../services/apiFetch";
 import { isAuthenticated } from "../services/auth";
 
 function Profile() {
@@ -21,16 +21,14 @@ function Profile() {
           return;
         }
 
-        const res = await API.get("/users/profile");
+        const data = await apiFetch("/users/profile");
 
-        setProfile(res.data);
-        setName(res.data.name || "");
-        setEmail(res.data.email || "");
-        setLocation(res.data.location || "");
+        setProfile(data);
+        setName(data.name || "");
+        setEmail(data.email || "");
+        setLocation(data.location || "");
       } catch (err) {
-        const message =
-          err?.response?.data?.message || "Failed to load profile";
-        setError(message);
+        setError(err?.message || "Failed to load profile");
       } finally {
         setIsLoading(false);
       }
@@ -56,14 +54,15 @@ function Profile() {
         payload.password = password;
       }
 
-      const res = await API.put("/users/profile", payload);
+      const data = await apiFetch("/users/profile", {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
 
-      setProfile(res.data);
+      setProfile(data);
       setPassword("");
     } catch (err) {
-      const message =
-        err?.response?.data?.message || "Failed to update profile";
-      alert(message);
+      alert(err?.message || "Failed to update profile");
     } finally {
       setIsSaving(false);
     }

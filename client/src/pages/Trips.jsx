@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import { apiFetch } from "../services/apiFetch";
 
 function Trips() {
   const [trips, setTrips] = useState([]);
@@ -12,12 +12,11 @@ function Trips() {
       setError("");
 
       try {
-        const res = await API.get("/trips");
+        const data = await apiFetch("/trips");
 
-        setTrips(res.data);
+        setTrips(data);
       } catch (err) {
-        const message = err?.response?.data?.message || "Failed to load trips";
-        setError(message);
+        setError(err?.message || "Failed to load trips");
       } finally {
         setIsLoading(false);
       }

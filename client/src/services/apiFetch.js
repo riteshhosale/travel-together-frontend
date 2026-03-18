@@ -4,9 +4,13 @@ const API_BASE =
   process.env.REACT_APP_API_URL ||
   "https://travel-together-backend.onrender.com";
 
+const normalizeBase = (base) => base.replace(/\/+$/, "");
+
 const buildUrl = (path) => {
   const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${API_BASE}/api${normalized}`;
+  const base = normalizeBase(API_BASE);
+  const apiBase = base.endsWith("/api") ? base : `${base}/api`;
+  return `${apiBase}${normalized}`;
 };
 
 const isFormData = (body) =>

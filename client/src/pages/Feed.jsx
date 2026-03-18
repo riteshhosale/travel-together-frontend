@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import API from "../services/api";
+import { apiFetch } from "../services/apiFetch";
 
 function Feed() {
   const [searchParams] = useSearchParams();
@@ -17,8 +17,8 @@ function Feed() {
     try {
       setIsLoading(true);
       setError("");
-      const res = await API.get("/feed");
-      setPosts(res.data);
+      const data = await apiFetch("/feed");
+      setPosts(data);
     } catch (err) {
       const message = err?.response?.data?.message || "Failed to load feed";
       setError(message);
@@ -51,19 +51,17 @@ function Feed() {
         formData.append("image", image);
       }
 
-      const res = await API.post("/feed", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const data = await apiFetch("/feed", {
+        method: "POST",
+        body: formData,
       });
 
-      setPosts((prev) => [res.data, ...prev]);
+      setPosts((prev) => [data, ...prev]);
       setCaption("");
       setImage("");
       setImageFile(null);
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to post";
-      alert(message);
+      alert(err?.message || "Failed to post");
     } finally {
       setIsSubmitting(false);
     }

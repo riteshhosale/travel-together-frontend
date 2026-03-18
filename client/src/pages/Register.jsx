@@ -20,11 +20,13 @@ function Register() {
     try {
       setIsSubmitting(true);
 
-      const apiBase =
+      const rawBase =
         process.env.REACT_APP_API_URL ||
         "https://travel-together-backend.onrender.com";
+      const base = rawBase.replace(/\/+$/, "");
+      const apiBase = base.endsWith("/api") ? base : `${base}/api`;
 
-      const response = await fetch(`${apiBase}/api/auth/register`, {
+      const response = await fetch(`${apiBase}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
