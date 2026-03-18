@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import API from "../services/api";
 import { setToken } from "../services/auth";
 
 function Login() {
@@ -20,19 +19,30 @@ function Login() {
     try {
       setIsSubmitting(true);
 
-      const res = await API.post("/auth/login", {
-        email,
-        password,
+      const apiBase =
+        process.env.REACT_APP_API_URL ||
+        "https://travel-together-backend.onrender.com";
+
+      const response = await fetch(`${apiBase}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      setToken(res.data.token);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Login failed. Try again.");
+      }
+
+      setToken(data.token);
 
       alert("Login successful");
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      const message =
-        err?.response?.data?.message || "Login failed. Try again.";
-      alert(message);
+      alert(err?.message || "Login failed. Try again.");
     } finally {
       setIsSubmitting(false);
     }
