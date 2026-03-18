@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Chat from "./pages/Chat";
 import CreateTrip from "./pages/CreateTrip";
@@ -9,8 +10,52 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Reviews from "./pages/Reviews";
 import Trips from "./pages/Trips";
+import API from "./services/api";
+import { isAuthenticated } from "./services/auth";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [isUserLoading, setIsUserLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadUser = async () => {
+      if (!isAuthenticated()) {
+        if (isMounted) {
+          setIsUserLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const res = await API.get("/users/profile");
+
+        if (isMounted) {
+          setUser(res.data || null);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsUserLoading(false);
+        }
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (isAuthenticated() && isUserLoading && !user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
