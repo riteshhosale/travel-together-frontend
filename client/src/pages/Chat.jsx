@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useSearchParams } from "react-router-dom";
+import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
 import { getToken } from "../services/auth";
 
@@ -29,9 +30,37 @@ function Chat() {
   const [isConnected, setIsConnected] = useState(false);
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [memberCounts, setMemberCounts] = useState({});
   const [error, setError] = useState("");
 
   const token = getToken();
+
+  const getMemberCount = useCallback((payload) => {
+    if (Array.isArray(payload)) {
+      return payload.length;
+    }
+    if (payload && Array.isArray(payload.members)) {
+      return payload.members.length;
+    }
+    if (payload && typeof payload.count === "number") {
+      return payload.count;
+    }
+    return 0;
+  }, []);
+
+  const loadMemberCount = useCallback(
+    async (selectedTripId) => {
+      try {
+        const data = await apiFetch(`/trips/${selectedTripId}/members`);
+        const count = getMemberCount(data);
+        setMemberCounts((prev) => ({ ...prev, [selectedTripId]: count }));
+        return count;
+      } catch (err) {
+        return null;
+      }
+    },
+    [getMemberCount],
+  );
 
   useEffect(() => {
     if (!token) {
@@ -89,6 +118,9 @@ function Chat() {
         setIsLoadingTrips(true);
         const data = await apiFetch("/trips");
         setTrips(data || []);
+        await Promise.all(
+          (data || []).map((trip) => loadMemberCount(trip._id)),
+        );
       } catch (err) {
         setError(err?.message || "Failed to load trips");
       } finally {
@@ -97,7 +129,7 @@ function Chat() {
     };
 
     loadTrips();
-  }, [token]);
+  }, [loadMemberCount, token]);
 
   const loadMessages = async (selectedTripId) => {
     try {
@@ -135,6 +167,7 @@ function Chat() {
 
     socketRef.current.emit("joinTrip", normalizedTripId);
     setActiveTripId(normalizedTripId);
+    await loadMemberCount(normalizedTripId);
     await loadMessages(normalizedTripId);
   };
 
@@ -152,11 +185,27 @@ function Chat() {
     setMessage("");
   };
 
+  const handleJoinKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      joinTrip();
+    }
+  };
+
+  const handleMessageKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div className="fg-page min-h-screen px-4 py-12">
-      <div className="mx-auto w-full max-w-4xl">
+      <div className="fg-orb fg-orb-1" aria-hidden="true" />
+      <div className="fg-orb fg-orb-2" aria-hidden="true" />
+      <div className="fg-page-content mx-auto w-full max-w-4xl fg-rise">
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-600">
+          <p className="fg-kicker text-xs font-semibold uppercase">
             {featureName}
           </p>
           <h2 className="fg-title mt-3 text-3xl font-bold">{featureName}</h2>
@@ -165,11 +214,9 @@ function Chat() {
           </p>
         </div>
 
-        <div className="fg-glass rounded-3xl p-6 shadow-xl">
+        <div className="fg-section">
           {error && (
-            <div className="mb-4 rounded-xl border border-rose-300/60 bg-rose-100/70 px-4 py-3 text-sm text-rose-700">
-              {error}
-            </div>
+            <div className="fg-alert mb-4 px-4 py-3 text-sm">{error}</div>
           )}
 
           <div className="flex flex-wrap items-center gap-3">
@@ -177,6 +224,7 @@ function Chat() {
               value={tripId}
               onChange={(e) => setTripId(e.target.value)}
               disabled={isLoadingTrips}
+              onKeyDown={handleJoinKeyDown}
               className="fg-input w-full flex-1 text-sm"
             >
               <option value="">
@@ -200,7 +248,18 @@ function Chat() {
             </span>
           </div>
 
-          <div className="mt-6 h-72 overflow-y-auto rounded-xl border border-[var(--fg-border)] bg-white/35 p-4">
+          {activeTripId && (
+            <div className="mt-3 text-xs font-semibold fg-muted">
+              Members: {memberCounts[activeTripId] ?? "--"}
+              {trips.find((trip) => trip._id === activeTripId)?.maxMembers
+                ? ` / ${
+                    trips.find((trip) => trip._id === activeTripId).maxMembers
+                  }`
+                : ""}
+            </div>
+          )}
+
+          <div className="fg-card mt-6 h-72 overflow-y-auto p-4">
             {isLoadingMessages ? (
               <p className="fg-muted text-sm">Loading messages...</p>
             ) : messages.length === 0 ? (
@@ -229,6 +288,7 @@ function Chat() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type a message"
               disabled={!activeTripId}
+              onKeyDown={handleMessageKeyDown}
               className="fg-input w-full flex-1 text-sm"
             />
             <button
@@ -240,6 +300,7 @@ function Chat() {
             </button>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );

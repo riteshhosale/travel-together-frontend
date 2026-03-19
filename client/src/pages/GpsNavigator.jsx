@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import Footer from "../components/Footer";
 import { Link, useSearchParams } from "react-router-dom";
 
 function GpsNavigator() {
@@ -94,10 +95,12 @@ function GpsNavigator() {
 
   return (
     <div className="fg-page min-h-screen px-4 py-12">
-      <div className="mx-auto w-full max-w-5xl">
+      <div className="fg-orb fg-orb-1" aria-hidden="true" />
+      <div className="fg-orb fg-orb-2" aria-hidden="true" />
+      <div className="fg-page-content mx-auto w-full max-w-5xl fg-rise">
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-600">
+            <p className="fg-kicker text-xs font-semibold uppercase">
               {featureName}
             </p>
             <h1 className="fg-title mt-3 text-3xl font-black sm:text-4xl">
@@ -113,7 +116,7 @@ function GpsNavigator() {
           </Link>
         </div>
 
-        <section className="fg-glass rounded-3xl p-6 sm:p-8">
+        <section className="fg-section fg-rise">
           <div className="flex flex-wrap gap-3">
             <button
               onClick={getCurrentLocation}
@@ -138,14 +141,12 @@ function GpsNavigator() {
           </div>
 
           {error && (
-            <div className="mt-4 rounded-2xl border border-rose-300/70 bg-rose-100/70 px-4 py-3 text-sm text-rose-700">
-              {error}
-            </div>
+            <div className="fg-alert mt-4 px-4 py-3 text-sm">{error}</div>
           )}
 
           {position ? (
             <div className="mt-6 grid gap-5 md:grid-cols-2">
-              <div className="rounded-2xl border border-[var(--fg-border)] bg-white/50 p-5">
+              <div className="fg-card p-5">
                 <p className="fg-title text-sm font-bold">
                   Current Coordinates
                 </p>
@@ -172,7 +173,7 @@ function GpsNavigator() {
                 </a>
               </div>
 
-              <div className="overflow-hidden rounded-2xl border border-[var(--fg-border)] bg-white/60">
+              <div className="fg-card overflow-hidden">
                 <iframe
                   title="GPS map"
                   src={mapSrc}
@@ -187,6 +188,7 @@ function GpsNavigator() {
             </p>
           )}
         </section>
+        <Footer />
       </div>
     </div>
   );

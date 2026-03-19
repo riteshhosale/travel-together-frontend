@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
 
 function Reviews() {
@@ -74,18 +75,18 @@ function Reviews() {
 
   return (
     <div className="fg-page min-h-screen px-4 py-12">
-      <div className="mx-auto w-full max-w-4xl">
+      <div className="fg-orb fg-orb-1" aria-hidden="true" />
+      <div className="fg-orb fg-orb-2" aria-hidden="true" />
+      <div className="fg-page-content mx-auto w-full max-w-4xl fg-rise">
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-600">
-            Reviews
-          </p>
+          <p className="fg-kicker text-xs font-semibold uppercase">Reviews</p>
           <h2 className="fg-title mt-3 text-3xl font-bold">Trip feedback</h2>
           <p className="fg-muted mt-2 text-sm">
             See what travelers think and leave your own review.
           </p>
         </div>
 
-        <div className="fg-glass rounded-3xl p-6">
+        <div className="fg-section fg-rise">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="fg-muted text-xs font-semibold">
@@ -149,21 +150,19 @@ function Reviews() {
         </div>
 
         {error && (
-          <div className="mt-6 rounded-2xl border border-rose-300/60 bg-rose-100/70 px-4 py-3 text-sm text-rose-700">
-            {error}
-          </div>
+          <div className="fg-alert mt-6 px-4 py-3 text-sm">{error}</div>
         )}
 
         <div className="mt-8 space-y-4">
           {isLoadingReviews ? (
             <p className="fg-muted text-sm">Loading reviews...</p>
           ) : reviews.length === 0 ? (
-            <div className="fg-glass rounded-2xl border-dashed p-6 text-center text-sm fg-muted">
+            <div className="fg-card border-dashed p-6 text-center text-sm fg-muted">
               No reviews yet.
             </div>
           ) : (
             reviews.map((review) => (
-              <div key={review._id} className="fg-glass rounded-2xl p-6">
+              <div key={review._id} className="fg-card p-6">
                 <p className="fg-title text-sm font-semibold">
                   Rating: {review.rating}/5
                 </p>
@@ -174,6 +173,7 @@ function Reviews() {
             ))
           )}
         </div>
+        <Footer />
       </div>
     </div>
   );

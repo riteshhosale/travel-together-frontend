@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
 import { isAuthenticated } from "../services/auth";
 
@@ -70,84 +71,87 @@ function Profile() {
 
   return (
     <div className="fg-page min-h-screen px-4 py-12">
-      <div className="fg-glass mx-auto w-full max-w-3xl rounded-3xl p-8">
-        <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-600">
-            Profile
-          </p>
-          <h2 className="fg-title mt-3 text-3xl font-bold">Your details</h2>
-          <p className="fg-muted mt-2 text-sm">
-            Keep your information up to date for better matches.
-          </p>
-        </div>
-
-        {error && (
-          <div className="mb-6 rounded-2xl border border-rose-300/60 bg-rose-100/70 px-4 py-3 text-sm text-rose-700">
-            {error}
+      <div className="fg-orb fg-orb-1" aria-hidden="true" />
+      <div className="fg-orb fg-orb-2" aria-hidden="true" />
+      <div className="fg-page-content mx-auto w-full max-w-3xl fg-rise">
+        <div className="fg-section">
+          <div className="mb-6">
+            <p className="fg-kicker text-xs font-semibold uppercase">Profile</p>
+            <h2 className="fg-title mt-3 text-3xl font-bold">Your details</h2>
+            <p className="fg-muted mt-2 text-sm">
+              Keep your information up to date for better matches.
+            </p>
           </div>
-        )}
 
-        {isLoading ? (
-          <p className="fg-muted text-sm">Loading profile...</p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="fg-muted text-xs font-semibold">Name</label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
-            </div>
+          {error && (
+            <div className="fg-alert mb-6 px-4 py-3 text-sm">{error}</div>
+          )}
 
-            <div>
-              <label className="fg-muted text-xs font-semibold">Email</label>
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
-            </div>
+          {isLoading ? (
+            <p className="fg-muted text-sm">Loading profile...</p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="fg-muted text-xs font-semibold">Name</label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
 
-            <div>
-              <label className="fg-muted text-xs font-semibold">Location</label>
-              <input
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
-            </div>
+              <div>
+                <label className="fg-muted text-xs font-semibold">Email</label>
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
 
-            <div>
-              <label className="fg-muted text-xs font-semibold">
-                New password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Leave blank to keep current"
-                className="fg-input mt-2 text-sm"
-              />
-            </div>
-          </div>
-        )}
+              <div>
+                <label className="fg-muted text-xs font-semibold">
+                  Location
+                </label>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <button
-            onClick={saveProfile}
-            disabled={isSaving}
-            className="fg-btn-primary text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isSaving ? "Saving..." : "Save changes"}
-          </button>
-          {profile && (
-            <div className="fg-muted rounded-xl border border-[var(--fg-border)] px-4 py-3 text-xs">
-              Member since:{" "}
-              {new Date(profile.createdAt || Date.now()).toDateString()}
+              <div>
+                <label className="fg-muted text-xs font-semibold">
+                  New password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Leave blank to keep current"
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
             </div>
           )}
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              onClick={saveProfile}
+              disabled={isSaving}
+              className="fg-btn-primary text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isSaving ? "Saving..." : "Save changes"}
+            </button>
+            {profile && (
+              <div className="fg-chip text-xs">
+                Member since:{" "}
+                {new Date(profile.createdAt || Date.now()).toDateString()}
+              </div>
+            )}
+          </div>
         </div>
+        <Footer />
       </div>
     </div>
   );

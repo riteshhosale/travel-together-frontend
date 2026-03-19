@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 import { setToken } from "../services/auth";
 
 function Login() {
@@ -52,50 +53,55 @@ function Login() {
 
   return (
     <div className="fg-page min-h-screen px-4 py-12">
-      <div className="fg-glass mx-auto w-full max-w-md rounded-3xl p-8">
-        <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-600">
-            Welcome back
-          </p>
-          <h2 className="fg-title mt-3 text-3xl font-bold">Sign in</h2>
-          <p className="fg-muted mt-2 text-sm">
-            Resume planning your next adventure.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label className="fg-muted text-xs font-semibold">
-              Email address
-            </label>
-            <input
-              placeholder="you@example.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="fg-input mt-2 text-sm"
-            />
+      <div className="fg-orb fg-orb-1" aria-hidden="true" />
+      <div className="fg-orb fg-orb-2" aria-hidden="true" />
+      <div className="fg-page-content mx-auto w-full max-w-md fg-rise">
+        <div className="fg-section">
+          <div className="mb-6">
+            <p className="fg-kicker text-xs font-semibold uppercase">
+              Welcome back
+            </p>
+            <h2 className="fg-title mt-3 text-3xl font-bold">Sign in</h2>
+            <p className="fg-muted mt-2 text-sm">
+              Resume planning your next adventure.
+            </p>
           </div>
 
-          <div>
-            <label className="fg-muted text-xs font-semibold">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="fg-input mt-2 text-sm"
-            />
-          </div>
-        </div>
+          <div className="space-y-4">
+            <div>
+              <label className="fg-muted text-xs font-semibold">
+                Email address
+              </label>
+              <input
+                placeholder="you@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="fg-input mt-2 text-sm"
+              />
+            </div>
 
-        <button
-          onClick={login}
-          disabled={isSubmitting}
-          className="fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {isSubmitting ? "Signing in..." : "Login"}
-        </button>
+            <div>
+              <label className="fg-muted text-xs font-semibold">Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="fg-input mt-2 text-sm"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={login}
+            disabled={isSubmitting}
+            className="fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {isSubmitting ? "Signing in..." : "Login"}
+          </button>
+        </div>
+        <Footer />
       </div>
     </div>
   );
