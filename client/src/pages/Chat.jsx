@@ -4,7 +4,18 @@ import { useSearchParams } from "react-router-dom";
 import { apiFetch } from "../services/apiFetch";
 import { getToken } from "../services/auth";
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:5001";
+const normalizeBase = (base) => base.replace(/\/+$/, "");
+
+const resolveSocketUrl = () => {
+  const rawBase =
+    process.env.REACT_APP_SOCKET_URL ||
+    process.env.REACT_APP_API_URL ||
+    "https://travel-together-backend.onrender.com";
+  const base = normalizeBase(rawBase);
+  return base.endsWith("/api") ? base.slice(0, -4) : base;
+};
+
+const SOCKET_URL = resolveSocketUrl();
 
 function Chat() {
   const [searchParams] = useSearchParams();
@@ -29,7 +40,6 @@ function Chat() {
     }
 
     const socket = io(SOCKET_URL, {
-      transports: ["websocket"],
       auth: {
         token,
       },
