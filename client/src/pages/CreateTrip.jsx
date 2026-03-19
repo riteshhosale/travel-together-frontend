@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
 import { useNavigate } from "react-router-dom";
@@ -47,14 +48,19 @@ function CreateTrip() {
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-2xl">
         <div className="fg-section fg-rise">
-          <div className="mb-6">
-            <p className="fg-kicker text-xs font-semibold uppercase">
-              New journey
-            </p>
-            <h2 className="fg-title mt-3 text-3xl font-bold">Create a trip</h2>
-            <p className="fg-muted mt-2 text-sm">
-              Share where you are headed and invite like-minded travelers.
-            </p>
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                New journey
+              </p>
+              <h2 className="fg-title mt-3 text-3xl font-bold">
+                Create a trip
+              </h2>
+              <p className="fg-muted mt-2 text-sm">
+                Share where you are headed and invite like-minded travelers.
+              </p>
+            </div>
+            <BackButton />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

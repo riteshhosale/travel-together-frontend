@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { setToken } from "../services/auth";
 
@@ -57,14 +58,17 @@ function Login() {
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-md fg-rise">
         <div className="fg-section">
-          <div className="mb-6">
-            <p className="fg-kicker text-xs font-semibold uppercase">
-              Welcome back
-            </p>
-            <h2 className="fg-title mt-3 text-3xl font-bold">Sign in</h2>
-            <p className="fg-muted mt-2 text-sm">
-              Resume planning your next adventure.
-            </p>
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                Welcome back
+              </p>
+              <h2 className="fg-title mt-3 text-3xl font-bold">Sign in</h2>
+              <p className="fg-muted mt-2 text-sm">
+                Resume planning your next adventure.
+              </p>
+            </div>
+            <BackButton />
           </div>
 
           <div className="space-y-4">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
 import { isAuthenticated } from "../services/auth";
@@ -75,12 +76,17 @@ function Profile() {
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-3xl fg-rise">
         <div className="fg-section">
-          <div className="mb-6">
-            <p className="fg-kicker text-xs font-semibold uppercase">Profile</p>
-            <h2 className="fg-title mt-3 text-3xl font-bold">Your details</h2>
-            <p className="fg-muted mt-2 text-sm">
-              Keep your information up to date for better matches.
-            </p>
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                Profile
+              </p>
+              <h2 className="fg-title mt-3 text-3xl font-bold">Your details</h2>
+              <p className="fg-muted mt-2 text-sm">
+                Keep your information up to date for better matches.
+              </p>
+            </div>
+            <BackButton />
           </div>
 
           {error && (

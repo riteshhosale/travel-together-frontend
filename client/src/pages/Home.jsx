@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Stats from "../components/Stats";
@@ -31,6 +32,9 @@ function Home() {
         <Navbar />
 
         <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+          <div className="mb-6 flex justify-end">
+            <BackButton />
+          </div>
           <section id="home" className="fg-section fg-rise">
             <p className="fg-kicker text-xs font-semibold uppercase">
               TravelTogether

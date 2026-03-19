@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 function GpsNavigator() {
   const [searchParams] = useSearchParams();
@@ -111,9 +112,7 @@ function GpsNavigator() {
               navigation.
             </p>
           </div>
-          <Link to="/" className="fg-btn-secondary text-sm">
-            Back to Home
-          </Link>
+          <BackButton />
         </div>
 
         <section className="fg-section fg-rise">

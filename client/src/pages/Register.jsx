@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -61,14 +62,19 @@ function Register() {
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-md fg-rise">
         <div className="fg-section">
-          <div className="mb-6 text-center">
-            <p className="fg-kicker text-xs font-semibold uppercase">
-              {featureName}
-            </p>
-            <h2 className="fg-title mt-3 text-3xl font-bold">{featureName}</h2>
-            <p className="fg-muted mt-2 text-sm">
-              Find travel partners who match your vibe.
-            </p>
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                {featureName}
+              </p>
+              <h2 className="fg-title mt-3 text-3xl font-bold">
+                {featureName}
+              </h2>
+              <p className="fg-muted mt-2 text-sm">
+                Find travel partners who match your vibe.
+              </p>
+            </div>
+            <BackButton />
           </div>
 
           <div className="space-y-4">

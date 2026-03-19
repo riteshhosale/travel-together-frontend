@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
 
@@ -63,7 +64,7 @@ function Trips() {
       <div className="fg-orb fg-orb-1" aria-hidden="true" />
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-5xl fg-rise">
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="fg-kicker text-xs font-semibold uppercase">
               Explore trips
@@ -76,6 +77,7 @@ function Trips() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <BackButton />
             <span className="fg-chip text-xs font-semibold">
               {trips.length} trips
             </span>

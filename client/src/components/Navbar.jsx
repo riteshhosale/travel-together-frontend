@@ -13,18 +13,16 @@ function Navbar() {
   return (
     <header className="fg-glass sticky top-0 z-10 border-b border-[var(--fg-border)] px-4 py-4 sm:px-6">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => window.history.back()}
-            className="fg-btn-secondary text-xs"
-          >
-            Back
-          </button>
-          <Link to="/" className="fg-title text-lg font-bold tracking-wide">
+        <Link to="/" className="flex items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="TravelTogether logo"
+            className="h-9 w-9 rounded-full object-cover"
+          />
+          <span className="fg-title text-lg font-bold tracking-wide">
             TravelTogether
-          </Link>
-        </div>
+          </span>
+        </Link>
         <div className="ml-auto flex flex-wrap items-center gap-4 text-sm">
           <nav className="flex flex-wrap items-center gap-4 text-sm">
             <NavLink
