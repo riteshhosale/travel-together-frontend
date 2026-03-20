@@ -1,8 +1,8 @@
 function Stats() {
   const stats = [
-    { label: "Active trips", value: "240+" },
+    { label: "Trips created", value: "240+" },
     { label: "AI plans crafted", value: "1.2k" },
-    { label: "Happy travelers", value: "4.8/5" },
+    { label: "Travel match score", value: "4.8/5" },
   ];
 
   return (

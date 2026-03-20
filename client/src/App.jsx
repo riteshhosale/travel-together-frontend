@@ -5,6 +5,7 @@ import CreateTrip from "./pages/CreateTrip";
 import Feed from "./pages/Feed";
 import GpsNavigator from "./pages/GpsNavigator";
 import Home from "./pages/Home";
+import AI from "./pages/AI";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -62,6 +63,7 @@ function App() {
       <Route path="/trips" element={<Trips />} />
       <Route path="/create-trip" element={<CreateTrip />} />
       <Route path="/feed" element={<Feed />} />
+      <Route path="/ai" element={<AI />} />
       <Route path="/chat" element={<Chat />} />
       <Route path="/gps" element={<GpsNavigator />} />
       <Route path="/reviews" element={<Reviews />} />

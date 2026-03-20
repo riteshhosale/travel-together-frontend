@@ -95,10 +95,10 @@ function GpsNavigator() {
   }, [position]);
 
   return (
-    <div className="fg-page min-h-screen px-4 py-12">
+    <div className="fg-page min-h-screen px-4 py-10 sm:py-12">
       <div className="fg-orb fg-orb-1" aria-hidden="true" />
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
-      <div className="fg-page-content mx-auto w-full max-w-5xl fg-rise">
+      <div className="fg-page-content mx-auto w-full max-w-6xl fg-rise">
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="fg-kicker text-xs font-semibold uppercase">
@@ -107,85 +107,111 @@ function GpsNavigator() {
             <h1 className="fg-title mt-3 text-3xl font-black sm:text-4xl">
               {featureName}
             </h1>
-            <p className="fg-muted mt-2 text-sm sm:text-base">
-              Use your device GPS to detect your location and open instant
-              navigation.
+            <p className="fg-muted mt-2 max-w-2xl text-sm sm:text-base">
+              Detect your current location, track movement live, and jump into maps instantly when you need directions.
             </p>
           </div>
           <BackButton />
         </div>
 
         <section className="fg-section fg-rise">
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={getCurrentLocation}
-              className="fg-btn-primary text-sm"
-              disabled={isLocating}
-            >
-              {isLocating ? "Detecting..." : "Use My GPS"}
-            </button>
-            <button
-              onClick={startTracking}
-              className="fg-btn-secondary text-sm"
-              disabled={isTracking}
-            >
-              Start Live Tracking
-            </button>
-            <button onClick={stopTracking} className="fg-btn-secondary text-sm">
-              Stop Tracking
-            </button>
-            <span className="fg-muted text-xs">
-              {isTracking ? "Live tracking on" : "Live tracking off"}
-            </span>
-          </div>
-
-          {error && (
-            <div className="fg-alert mt-4 px-4 py-3 text-sm">{error}</div>
-          )}
-
-          {position ? (
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
-              <div className="fg-card p-5">
-                <p className="fg-title text-sm font-bold">
-                  Current Coordinates
-                </p>
-                <p className="fg-muted mt-3 text-sm">
-                  Latitude: {position.lat}
-                </p>
-                <p className="fg-muted mt-1 text-sm">
-                  Longitude: {position.lng}
-                </p>
-                <p className="fg-muted mt-1 text-sm">
-                  Accuracy: {position.accuracy}m
-                </p>
-                <p className="fg-muted mt-1 text-sm">
-                  Updated: {position.timestamp}
-                </p>
-
-                <a
-                  href={`https://www.google.com/maps?q=${position.lat},${position.lng}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="fg-btn-primary mt-4 inline-block text-sm"
+          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={getCurrentLocation}
+                  className="fg-btn-primary text-sm"
+                  disabled={isLocating}
                 >
-                  Open in Google Maps
-                </a>
+                  {isLocating ? "Detecting..." : "Use My GPS"}
+                </button>
+                <button
+                  onClick={startTracking}
+                  className="fg-btn-secondary text-sm"
+                  disabled={isTracking}
+                >
+                  Start Live Tracking
+                </button>
+                <button onClick={stopTracking} className="fg-btn-secondary text-sm">
+                  Stop Tracking
+                </button>
               </div>
 
-              <div className="fg-card overflow-hidden">
+              <p className="fg-muted mt-4 text-sm">
+                {isTracking
+                  ? "Live tracking is on. Your latest coordinates will keep updating."
+                  : "Live tracking is off. Use GPS when you need a quick location check."}
+              </p>
+
+              {error && (
+                <div className="fg-alert mt-4 px-4 py-3 text-sm">{error}</div>
+              )}
+
+              {position ? (
+                <div className="mt-6 grid gap-5 md:grid-cols-2">
+                  <div className="fg-card p-5">
+                    <p className="fg-title text-sm font-bold">Current coordinates</p>
+                    <p className="fg-muted mt-3 text-sm">Latitude: {position.lat}</p>
+                    <p className="fg-muted mt-1 text-sm">Longitude: {position.lng}</p>
+                    <p className="fg-muted mt-1 text-sm">Accuracy: {position.accuracy}m</p>
+                    <p className="fg-muted mt-1 text-sm">Updated: {position.timestamp}</p>
+
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      <a
+                        href={`https://www.google.com/maps?q=${position.lat},${position.lng}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="fg-btn-primary text-sm"
+                      >
+                        Open in Google Maps
+                      </a>
+                      <a
+                        href={`https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}#map=14/${position.lat}/${position.lng}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="fg-btn-secondary text-sm"
+                      >
+                        Open in OpenStreetMap
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="fg-card p-5">
+                    <p className="fg-title text-sm font-bold">Quick tips</p>
+                    <ul className="fg-muted mt-3 space-y-3 text-sm">
+                      <li>• Allow location access in your browser when prompted.</li>
+                      <li>• Use live tracking while traveling or navigating unfamiliar places.</li>
+                      <li>• Open Google Maps for turn-by-turn directions.</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <div className="fg-card mt-6 p-5">
+                  <p className="fg-title text-base font-bold">No location detected yet</p>
+                  <p className="fg-muted mt-3 text-sm">
+                    Tap <strong>Use My GPS</strong> to detect your current position and open live map tools.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="fg-card overflow-hidden">
+              {mapSrc ? (
                 <iframe
                   title="GPS map"
                   src={mapSrc}
-                  className="h-[280px] w-full"
+                  className="h-[320px] w-full sm:h-[420px]"
                   loading="lazy"
                 />
-              </div>
+              ) : (
+                <div className="flex h-[320px] items-center justify-center p-6 text-center sm:h-[420px]">
+                  <p className="fg-muted text-sm">
+                    Your live map preview will appear here after GPS detection.
+                  </p>
+                </div>
+              )}
             </div>
-          ) : (
-            <p className="fg-muted mt-5 text-sm">
-              Click "Use My GPS" to start location detection.
-            </p>
-          )}
+          </div>
         </section>
         <Footer />
       </div>

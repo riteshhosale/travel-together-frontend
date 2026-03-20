@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
@@ -57,21 +57,17 @@ function Register() {
   };
 
   return (
-    <div className="fg-page min-h-screen px-4 py-12">
+    <div className="fg-page min-h-screen px-4 py-10 sm:py-12">
       <div className="fg-orb fg-orb-1" aria-hidden="true" />
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-md fg-rise">
         <div className="fg-section">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="fg-kicker text-xs font-semibold uppercase">
-                {featureName}
-              </p>
-              <h2 className="fg-title mt-3 text-3xl font-bold">
-                {featureName}
-              </h2>
+              <p className="fg-kicker text-xs font-semibold uppercase">{featureName}</p>
+              <h2 className="fg-title mt-3 text-3xl font-bold">Create your account</h2>
               <p className="fg-muted mt-2 text-sm">
-                Find travel partners who match your vibe.
+                Join TravelTogether and start planning with people who match your vibe.
               </p>
             </div>
             <BackButton />
@@ -79,9 +75,7 @@ function Register() {
 
           <div className="space-y-4">
             <div>
-              <label className="fg-muted text-xs font-semibold">
-                Full name
-              </label>
+              <label className="fg-muted text-xs font-semibold">Full name</label>
               <input
                 placeholder="Jane Doe"
                 value={name}
@@ -91,9 +85,7 @@ function Register() {
             </div>
 
             <div>
-              <label className="fg-muted text-xs font-semibold">
-                Email address
-              </label>
+              <label className="fg-muted text-xs font-semibold">Email address</label>
               <input
                 placeholder="you@example.com"
                 type="email"
@@ -115,9 +107,7 @@ function Register() {
             </div>
 
             <div>
-              <label className="fg-muted text-xs font-semibold">
-                Home base
-              </label>
+              <label className="fg-muted text-xs font-semibold">Home base</label>
               <input
                 placeholder="City, Country"
                 value={location}
@@ -132,8 +122,15 @@ function Register() {
             disabled={isSubmitting}
             className="fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSubmitting ? "Registering..." : "Register"}
+            {isSubmitting ? "Creating account..." : "Register"}
           </button>
+
+          <p className="fg-muted mt-5 text-center text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="fg-title font-semibold">
+              Sign in
+            </Link>
+          </p>
         </div>
         <Footer />
       </div>
