@@ -5,7 +5,6 @@ import EmptyState from "../components/EmptyState";
 import Footer from "../components/Footer";
 import SectionHeader from "../components/SectionHeader";
 import { apiFetch } from "../services/apiFetch";
-import { notify } from "../services/notify";
 
 function Feed() {
   const [searchParams] = useSearchParams();
