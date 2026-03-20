@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BackButton from "../components/BackButton";
+import EmptyState from "../components/EmptyState";
 import Footer from "../components/Footer";
+import SectionHeader from "../components/SectionHeader";
 import { apiFetch } from "../services/apiFetch";
+import { notify } from "../services/notify";
 
 function Trips() {
   const [trips, setTrips] = useState([]);
@@ -57,13 +60,11 @@ function Trips() {
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-6xl fg-rise">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="fg-kicker text-xs font-semibold uppercase">Explore trips</p>
-            <h2 className="fg-title mt-3 text-3xl font-bold sm:text-4xl">Available trips</h2>
-            <p className="fg-muted mt-2 max-w-2xl text-sm sm:text-base">
-              Discover shared journeys, compare destinations, and join trips that fit your timing and budget.
-            </p>
-          </div>
+          <SectionHeader
+            kicker="Explore trips"
+            title="Available trips"
+            subtitle="Discover shared journeys, compare destinations, and join trips that fit your timing and budget."
+          />
           <div className="flex flex-wrap items-center gap-3">
             <BackButton />
             <span className="fg-chip text-xs font-semibold">{trips.length} trips</span>
@@ -92,15 +93,12 @@ function Trips() {
             ))}
           </div>
         ) : trips.length === 0 ? (
-          <div className="fg-card border-dashed p-8 text-center">
-            <h3 className="fg-title text-xl font-bold">No trips yet</h3>
-            <p className="fg-muted mt-3 text-sm">
-              Be the first to share your destination and start planning with others.
-            </p>
-            <Link to="/create-trip" className="fg-btn-primary mt-6 text-sm">
-              Create your first trip
-            </Link>
-          </div>
+          <EmptyState
+            title="No trips yet"
+            description="Be the first to share your destination and start planning with others."
+            actionLabel="Create your first trip"
+            actionTo="/create-trip"
+          />
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {trips.map((trip) => {
@@ -145,14 +143,14 @@ function Trips() {
                             currentCount !== null &&
                             currentCount >= trip.maxMembers
                           ) {
-                            alert("This trip is full.");
+                            notify({ message: "This trip is full.", type: "error" });
                             return;
                           }
                           await apiFetch(`/trips/join/${trip._id}`, { method: "POST" });
                           await fetchMemberCount(trip._id);
-                          alert("Joined trip successfully");
+                          notify({ message: "Joined trip successfully", type: "success" });
                         } catch (err) {
-                          alert(err?.message || "Failed to join trip");
+                          notify({ message: err?.message || "Failed to join trip", type: "error" });
                         } finally {
                           setJoiningTripId(null);
                         }

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -70,7 +69,6 @@ function Register() {
                 Join TravelTogether and start planning with people who match your vibe.
               </p>
             </div>
-            <BackButton />
           </div>
 
           <div className="space-y-4">

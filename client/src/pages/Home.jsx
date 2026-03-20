@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import BackButton from "../components/BackButton";
+import FeatureCard from "../components/FeatureCard";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import SectionHeader from "../components/SectionHeader";
 import Stats from "../components/Stats";
 
 function Home() {
@@ -59,16 +61,21 @@ function Home() {
           </div>
 
           <section id="home" className="fg-section fg-rise">
-            <p className="fg-kicker text-xs font-semibold uppercase">
-              TravelTogether
-            </p>
-            <h1 className="fg-title mt-4 max-w-4xl text-4xl font-black leading-tight sm:text-6xl">
-              Find the right travel partner for your next adventure.
-            </h1>
-            <p className="fg-muted mt-5 max-w-3xl text-base sm:text-lg">
-              Plan smarter, connect with like-minded travelers, and turn solo ideas
-              into shared experiences with tools built for modern travel.
-            </p>
+            <div className="mb-6 flex justify-center sm:justify-start">
+              <div className="flex h-24 w-24 items-center justify-center rounded-full border border-[var(--fg-border)] bg-slate-950/40 p-2 shadow-lg shadow-cyan-500/10">
+                <img
+                  src="/logo.png"
+                  alt="TravelTogether logo"
+                  className="h-20 w-20 rounded-full object-cover"
+                />
+              </div>
+            </div>
+
+            <SectionHeader
+              kicker="TravelTogether"
+              title="Find the right travel partner for your next adventure."
+              subtitle="Plan smarter, connect with like-minded travelers, and turn solo ideas into shared experiences with tools built for modern travel."
+            />
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
@@ -91,18 +98,11 @@ function Home() {
           </section>
 
           <section id="how-it-works" className="fg-section mt-10 fg-rise">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="fg-kicker text-xs font-semibold uppercase">How it works</p>
-                <h2 className="fg-title text-3xl font-black sm:text-4xl">
-                  Plan together in three simple steps
-                </h2>
-              </div>
-              <p className="fg-muted max-w-2xl text-sm sm:text-base">
-                Everything is designed to help travelers discover trips, coordinate
-                easily, and move faster from idea to itinerary.
-              </p>
-            </div>
+            <SectionHeader
+              kicker="How it works"
+              title="Plan together in three simple steps"
+              subtitle="Everything is designed to help travelers discover trips, coordinate easily, and move faster from idea to itinerary."
+            />
 
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {steps.map((step, index) => (
@@ -116,38 +116,26 @@ function Home() {
           </section>
 
           <section id="features" className="fg-section mt-10 fg-rise">
-            <h2 className="fg-title text-3xl font-black sm:text-4xl">
-              Tools that make group travel easier
-            </h2>
+            <SectionHeader title="Tools that make group travel easier" />
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
-                <article key={feature.title} className="fg-card p-5">
-                  <h3 className="fg-title text-base font-bold">{feature.title}</h3>
-                  <p className="fg-muted mt-2 text-sm">{feature.description}</p>
-                  <Link
-                    to={feature.to}
-                    className="fg-btn-secondary mt-4 inline-block text-sm"
-                  >
-                    Open Feature
-                  </Link>
-                </article>
+                <FeatureCard
+                  key={feature.title}
+                  title={feature.title}
+                  description={feature.description}
+                  to={feature.to}
+                />
               ))}
             </div>
           </section>
 
           <section id="trust" className="fg-section mt-10 fg-rise">
             <div className="grid gap-6 lg:grid-cols-2">
-              <div>
-                <p className="fg-kicker text-xs font-semibold uppercase">Why choose us</p>
-                <h2 className="fg-title mt-3 text-3xl font-black sm:text-4xl">
-                  Built for real travelers, not just demo screens.
-                </h2>
-                <p className="fg-muted mt-4 text-sm sm:text-base">
-                  TravelTogether focuses on the moments that matter most: finding
-                  the right people, keeping plans clear, and making every trip feel
-                  easier to manage.
-                </p>
-              </div>
+              <SectionHeader
+                kicker="Why choose us"
+                title="Built for real travelers, not just demo screens."
+                subtitle="TravelTogether focuses on the moments that matter most: finding the right people, keeping plans clear, and making every trip feel easier to manage."
+              />
               <div className="grid gap-4">
                 {trustPoints.map((item) => (
                   <div key={item} className="fg-card p-5">
@@ -159,13 +147,12 @@ function Home() {
           </section>
 
           <section className="fg-section mt-10 text-center fg-rise">
-            <p className="fg-kicker text-xs font-semibold uppercase">Ready to explore?</p>
-            <h2 className="fg-title mt-3 text-3xl font-black sm:text-4xl">
-              Start your next journey with the right people.
-            </h2>
-            <p className="fg-muted mx-auto mt-4 max-w-2xl text-sm sm:text-base">
-              Create a trip, discover companions, and use AI tools to plan with confidence.
-            </p>
+            <SectionHeader
+              kicker="Ready to explore?"
+              title="Start your next journey with the right people."
+              subtitle="Create a trip, discover companions, and use AI tools to plan with confidence."
+              align="center"
+            />
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
               <Link to="/create-trip" className="fg-btn-primary text-sm">
                 Start Your Journey

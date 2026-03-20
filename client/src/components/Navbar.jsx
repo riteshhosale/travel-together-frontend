@@ -15,14 +15,19 @@ function Navbar() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <img
-              src="/logo.png"
-              alt="TravelTogether logo"
-              className="h-9 w-9 rounded-full object-cover"
-            />
-            <span className="fg-title text-lg font-bold tracking-wide">
-              TravelTogether
-            </span>
+            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--fg-border)] bg-slate-950/40 p-1 shadow-lg shadow-cyan-500/10">
+              <img
+                src="/logo.png"
+                alt="TravelTogether logo"
+                className="h-9 w-9 rounded-full object-cover"
+              />
+            </div>
+            <div>
+              <span className="fg-title block text-lg font-bold tracking-wide">
+                TravelTogether
+              </span>
+              <span className="fg-muted text-xs">Travel better together</span>
+            </div>
           </Link>
 
           <div className="flex items-center gap-2 sm:hidden">

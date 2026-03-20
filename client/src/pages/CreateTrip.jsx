@@ -2,6 +2,7 @@ import { useState } from "react";
 import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiFetch";
+import { notify } from "../services/notify";
 import { useNavigate } from "react-router-dom";
 
 function CreateTrip() {
@@ -15,7 +16,7 @@ function CreateTrip() {
 
   const createTrip = async () => {
     if (!destination || !date) {
-      alert("Destination and date are required.");
+      notify({ message: "Destination and date are required.", type: "error" });
       return;
     }
 
@@ -33,10 +34,10 @@ function CreateTrip() {
         }),
       });
 
-      alert("Trip created");
+      notify({ message: "Trip created", type: "success" });
       navigate("/trips");
     } catch (err) {
-      alert(err?.message || "Trip creation failed. Try again.");
+      notify({ message: err?.message || "Trip creation failed. Try again.", type: "error" });
     } finally {
       setIsSubmitting(false);
     }

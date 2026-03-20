@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import { setToken } from "../services/auth";
+import { notify } from "../services/notify";
 
 function Login() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function Login() {
 
   const login = async () => {
     if (!email || !password) {
-      alert("Please enter both email and password.");
+      notify({ message: "Please enter both email and password.", type: "error" });
       return;
     }
 
@@ -42,10 +42,10 @@ function Login() {
       }
 
       setToken(data.token);
-      alert("Login successful");
+      notify({ message: "Login successful", type: "success" });
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      alert(err?.message || "Login failed. Try again.");
+      notify({ message: err?.message || "Login failed. Try again.", type: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -65,7 +65,6 @@ function Login() {
                 Continue planning your next journey with your travel group.
               </p>
             </div>
-            <BackButton />
           </div>
 
           <div className="space-y-4">

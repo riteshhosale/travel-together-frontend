@@ -18,6 +18,8 @@
     --fg-text: #e2e8f0;
     --fg-muted: #8ea0c4;
     --fg-glow: rgba(56, 189, 248, 0.2);
+    --fg-shadow-strong: 0 24px 60px rgba(2, 6, 23, 0.45);
+    --fg-shadow-soft: 0 18px 40px rgba(2, 6, 23, 0.35);
 }
 
 body {
@@ -25,6 +27,8 @@ body {
     font-family: "Sora", "Space Grotesk", "Segoe UI", sans-serif;
     color: var(--fg-text);
     background: var(--fg-bg);
+    line-height: 1.55;
+    letter-spacing: 0.01em;
 }
 
 .fg-page {
@@ -84,16 +88,16 @@ body {
 }
 
 .fg-glass {
-    background: var(--fg-panel);
+    background: rgba(8, 12, 24, 0.78);
     backdrop-filter: blur(18px);
     border: 1px solid var(--fg-border);
-    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.45);
+    box-shadow: var(--fg-shadow-strong);
 }
 
 .fg-section {
     border-radius: 28px;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.55));
+    padding: clamp(1.35rem, 2vw, 2rem);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.58));
     border: 1px solid rgba(148, 163, 184, 0.2);
     box-shadow: 0 20px 50px rgba(2, 6, 23, 0.4);
 }
@@ -101,14 +105,15 @@ body {
 .fg-card {
     border-radius: 22px;
     border: 1px solid rgba(148, 163, 184, 0.2);
-    background: rgba(15, 23, 42, 0.65);
-    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.35);
+    background: rgba(15, 23, 42, 0.68);
+    box-shadow: var(--fg-shadow-soft);
 }
 
 .fg-title {
     color: var(--fg-text);
     font-family: "Space Grotesk", "Sora", sans-serif;
     letter-spacing: -0.02em;
+    text-wrap: balance;
 }
 
 .fg-muted {
@@ -148,13 +153,19 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    padding: 0.75rem 1.6rem;
+    padding: 0.78rem 1.65rem;
     background: linear-gradient(135deg, var(--fg-accent), var(--fg-accent-strong));
     color: #020617;
     font-weight: 700;
     text-decoration: none;
     border: none;
     box-shadow: 0 12px 30px rgba(6, 182, 212, 0.25);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.fg-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 34px rgba(6, 182, 212, 0.32);
 }
 
 .fg-btn-secondary {
@@ -162,11 +173,16 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    padding: 0.65rem 1.5rem;
+    padding: 0.68rem 1.5rem;
     background: rgba(15, 23, 42, 0.5);
     border: 1px solid rgba(148, 163, 184, 0.3);
     color: var(--fg-text);
     text-decoration: none;
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.fg-btn-secondary:hover {
+    transform: translateY(-1px);
 }
 
 .fg-input {
@@ -220,6 +236,66 @@ body {
     position: relative;
     z-index: 1;
     padding: 2.5rem 0 3rem;
+    margin-top: 1rem;
     border-top: 1px solid rgba(148, 163, 184, 0.2);
     background: rgba(5, 10, 24, 0.65);
+}
+
+.fg-toast {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: min(420px, calc(100vw - 2rem));
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
+}
+
+.fg-toast-info {
+    background: rgba(15, 23, 42, 0.88);
+    color: var(--fg-text);
+}
+
+.fg-toast-success {
+    background: rgba(6, 95, 70, 0.88);
+    color: #ecfdf5;
+    border-color: rgba(52, 211, 153, 0.35);
+}
+
+.fg-toast-error {
+    background: rgba(127, 29, 29, 0.9);
+    color: #fee2e2;
+    border-color: rgba(248, 113, 113, 0.35);
+}
+
+.fg-toast-close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .fg-section {
+        border-radius: 22px;
+        padding: 1.15rem;
+    }
+
+    .fg-card {
+        border-radius: 18px;
+    }
+
+    .fg-toast {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+    }
 }

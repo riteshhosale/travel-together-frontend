@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
+import EmptyState from "../components/EmptyState";
 import Footer from "../components/Footer";
+import SectionHeader from "../components/SectionHeader";
 import { apiFetch } from "../services/apiFetch";
+import { notify } from "../services/notify";
 
 function Feed() {
   const [searchParams] = useSearchParams();
@@ -22,7 +25,7 @@ function Feed() {
       const data = await apiFetch("/feed");
       setPosts(data);
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to load feed";
+      const message = err?.message || "Failed to load feed";
       setError(message);
     } finally {
       setIsLoading(false);
@@ -75,24 +78,18 @@ function Feed() {
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
       <div className="fg-page-content mx-auto w-full max-w-4xl fg-rise">
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="fg-kicker text-xs font-semibold uppercase">
-              {featureName}
-            </p>
-            <h2 className="fg-title mt-3 text-3xl font-bold">{featureName}</h2>
-            <p className="fg-muted mt-2 text-sm">
-              Share snapshots and tips from your travels.
-            </p>
-          </div>
+          <SectionHeader
+            kicker={featureName}
+            title={featureName}
+            subtitle="Share snapshots and tips from your travels."
+          />
           <BackButton />
         </div>
 
         <div className="fg-section mb-8">
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
-              <label className="fg-muted text-xs font-semibold">
-                Upload Image
-              </label>
+              <label className="fg-muted text-xs font-semibold">Upload Image</label>
               <input
                 type="file"
                 accept="image/*"
@@ -104,9 +101,7 @@ function Feed() {
               />
             </div>
             <div>
-              <label className="fg-muted text-xs font-semibold">
-                Image URL
-              </label>
+              <label className="fg-muted text-xs font-semibold">Image URL</label>
               <input
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
@@ -114,7 +109,7 @@ function Feed() {
                 className="fg-input mt-2 text-sm"
               />
             </div>
-            <div className="sm:col-span-1">
+            <div>
               <label className="fg-muted text-xs font-semibold">Caption</label>
               <input
                 value={caption}
@@ -134,9 +129,7 @@ function Feed() {
           </button>
         </div>
 
-        {error && (
-          <div className="fg-alert mb-6 px-4 py-3 text-sm">{error}</div>
-        )}
+        {error && <div className="fg-alert mb-6 px-4 py-3 text-sm">{error}</div>}
 
         {isLoading ? (
           <div className="space-y-4">
@@ -148,9 +141,10 @@ function Feed() {
             ))}
           </div>
         ) : posts.length === 0 ? (
-          <div className="fg-card border-dashed p-8 text-center text-sm fg-muted">
-            No posts yet. Share the first update.
-          </div>
+          <EmptyState
+            title="No posts yet"
+            description="Share the first travel update with your community."
+          />
         ) : (
           <div className="space-y-6">
             {posts.map((post) => (
