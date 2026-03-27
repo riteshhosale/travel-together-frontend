@@ -1,6 +1,7 @@
 import { useState } from "react";
-import Footer from "../components/Footer";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import Footer from "../components/Footer";
+import { notify } from "../services/notify";
 
 function Register() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function Register() {
 
   const register = async () => {
     if (!name || !email || !password) {
-      alert("Name, email, and password are required.");
+      notify({ message: "Name, email, and password are required.", type: "error" });
       return;
     }
 
@@ -46,10 +47,10 @@ function Register() {
         throw new Error(data?.message || "Registration failed. Try again.");
       }
 
-      alert("User registered. Please login.");
+      notify({ message: "Account created. Please login.", type: "success" });
       navigate("/login");
     } catch (err) {
-      alert(err?.message || "Registration failed. Try again.");
+      notify({ message: err?.message || "Registration failed. Try again.", type: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -59,76 +60,100 @@ function Register() {
     <div className="fg-page min-h-screen px-4 py-10 sm:py-12">
       <div className="fg-orb fg-orb-1" aria-hidden="true" />
       <div className="fg-orb fg-orb-2" aria-hidden="true" />
-      <div className="fg-page-content mx-auto w-full max-w-md fg-rise">
-        <div className="fg-section">
-          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-            <div>
+      <div className="fg-page-content mx-auto w-full max-w-6xl fg-rise">
+        <div className="grid gap-8 lg:grid-cols-[0.95fr_1fr] lg:items-center">
+          <section className="fg-card p-6 sm:p-8">
+            <div className="mb-6">
               <p className="fg-kicker text-xs font-semibold uppercase">{featureName}</p>
               <h2 className="fg-title mt-3 text-3xl font-bold">Create your account</h2>
               <p className="fg-muted mt-2 text-sm">
-                Join TravelTogether and start planning with people who match your vibe.
+                Join a more polished travel platform built for matching, planning, and better trip coordination.
               </p>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="fg-muted text-xs font-semibold">Full name</label>
-              <input
-                placeholder="Jane Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="fg-muted text-xs font-semibold">Full name</label>
+                <input
+                  placeholder="Jane Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="fg-muted text-xs font-semibold">Email address</label>
+                <input
+                  placeholder="you@example.com"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="fg-muted text-xs font-semibold">Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="fg-muted text-xs font-semibold">Home base</label>
+                <input
+                  placeholder="City, Country"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="fg-input mt-2 text-sm"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="fg-muted text-xs font-semibold">Email address</label>
-              <input
-                placeholder="you@example.com"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
+            <button
+              onClick={register}
+              disabled={isSubmitting}
+              className="fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isSubmitting ? "Creating account..." : "Register"}
+            </button>
+
+            <p className="fg-muted mt-5 text-center text-sm">
+              Already have an account? {" "}
+              <Link to="/login" className="fg-title font-semibold">
+                Sign in
+              </Link>
+            </p>
+          </section>
+
+          <section className="fg-section">
+            <p className="fg-kicker text-xs font-semibold uppercase">Why join</p>
+            <h1 className="fg-title mt-4 text-4xl font-black sm:text-5xl">
+              Build better trips with better structure.
+            </h1>
+            <p className="fg-muted mt-5 max-w-xl text-sm leading-7 sm:text-base">
+              TravelTogether helps you move from rough ideas to real plans with cleaner
+              discovery, stronger trip collaboration, and an interface that feels more
+              trustworthy from the start.
+            </p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {[
+                "Create and discover trips faster",
+                "Use reviews and chat to plan with confidence",
+                "Get AI help without leaving the platform",
+              ].map((item) => (
+                <div key={item} className="fg-card p-4">
+                  <p className="fg-muted text-sm">{item}</p>
+                </div>
+              ))}
             </div>
-
-            <div>
-              <label className="fg-muted text-xs font-semibold">Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="fg-muted text-xs font-semibold">Home base</label>
-              <input
-                placeholder="City, Country"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="fg-input mt-2 text-sm"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={register}
-            disabled={isSubmitting}
-            className="fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isSubmitting ? "Creating account..." : "Register"}
-          </button>
-
-          <p className="fg-muted mt-5 text-center text-sm">
-            Already have an account?{" "}
-            <Link to="/login" className="fg-title font-semibold">
-              Sign in
-            </Link>
-          </p>
+          </section>
         </div>
         <Footer />
       </div>

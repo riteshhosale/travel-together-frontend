@@ -5,7 +5,7 @@ function BackButton({ label = "Back" }) {
       onClick={() => window.history.back()}
       className="fg-btn-secondary text-xs"
     >
-      {label}
+      ← {label}
     </button>
   );
 }

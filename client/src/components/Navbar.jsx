@@ -10,27 +10,36 @@ function Navbar() {
     navigate("/");
   };
 
+  const navItems = [
+    { label: "Home", to: "/" },
+    { label: "Trips", to: "/trips" },
+    { label: "Feed", to: "/feed" },
+    { label: "Chat", to: "/chat" },
+    { label: "AI", to: "/ai" },
+    { label: "Reviews", to: "/reviews" },
+  ];
+
   return (
-    <header className="fg-glass sticky top-0 z-10 border-b border-[var(--fg-border)] px-4 py-4 sm:px-6">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <header className="fg-navbar sticky top-0 z-30 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="fg-navbar-shell mx-auto flex w-full max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--fg-border)] bg-slate-950/40 p-1 shadow-lg shadow-cyan-500/10">
+            <div className="fg-logo-mark">
               <img
                 src="/logo.png"
                 alt="TravelTogether logo"
-                className="h-9 w-9 rounded-full object-cover"
+                className="h-10 w-10 rounded-2xl object-cover"
               />
             </div>
             <div>
               <span className="fg-title block text-lg font-bold tracking-wide">
                 TravelTogether
               </span>
-              <span className="fg-muted text-xs">Travel better together</span>
+              <span className="fg-muted text-xs">Professional trip planning, together</span>
             </div>
           </Link>
 
-          <div className="flex items-center gap-2 sm:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             {authed ? (
               <>
                 <Link to="/profile" className="fg-btn-secondary text-xs">
@@ -54,50 +63,21 @@ function Navbar() {
         </div>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-end">
-          <nav className="flex flex-wrap items-center gap-3 text-sm sm:gap-4">
-            <NavLink
-              to="/trips"
-              className={({ isActive }) =>
-                `fg-nav-link ${isActive ? "fg-nav-link-active" : ""}`
-              }
-            >
-              Trips
-            </NavLink>
-            <NavLink
-              to="/feed"
-              className={({ isActive }) =>
-                `fg-nav-link ${isActive ? "fg-nav-link-active" : ""}`
-              }
-            >
-              Feed
-            </NavLink>
-            <NavLink
-              to="/chat"
-              className={({ isActive }) =>
-                `fg-nav-link ${isActive ? "fg-nav-link-active" : ""}`
-              }
-            >
-              Chat
-            </NavLink>
-            <NavLink
-              to="/gps"
-              className={({ isActive }) =>
-                `fg-nav-link ${isActive ? "fg-nav-link-active" : ""}`
-              }
-            >
-              GPS
-            </NavLink>
-            <NavLink
-              to="/reviews"
-              className={({ isActive }) =>
-                `fg-nav-link ${isActive ? "fg-nav-link-active" : ""}`
-              }
-            >
-              Reviews
-            </NavLink>
+          <nav className="fg-nav-wrap flex flex-wrap items-center gap-2 text-sm sm:gap-3">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `fg-nav-pill ${isActive ? "fg-nav-pill-active" : ""}`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
           </nav>
 
-          <div className="hidden items-center gap-3 sm:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             {authed ? (
               <>
                 <Link to="/profile" className="fg-btn-secondary text-xs">
