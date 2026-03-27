@@ -88,13 +88,42 @@ function App() {
         <div className="fg-orb fg-orb-2" />
         <div className="fg-orb fg-orb-3" />
 
-        <div className="fg-card fg-loading-shell relative z-10 w-full max-w-md p-8 text-center">
-          <div className="fg-loading-spinner mx-auto" />
-          <p className="fg-kicker text-xs font-semibold uppercase">TravelTogether</p>
-          <h2 className="fg-title mt-4 text-2xl font-bold">Getting your trip space ready</h2>
+        <div className="fg-card fg-loading-shell relative z-10 w-full max-w-lg overflow-hidden p-8 text-center">
+          <div className="fg-loading-grid" aria-hidden="true">
+            <span className="fg-loading-dot fg-loading-dot-1" />
+            <span className="fg-loading-dot fg-loading-dot-2" />
+            <span className="fg-loading-dot fg-loading-dot-3" />
+          </div>
+
+          <div className="fg-loading-spinner-wrap mx-auto">
+            <div className="fg-loading-ring fg-loading-ring-outer" />
+            <div className="fg-loading-ring fg-loading-ring-middle" />
+            <div className="fg-loading-ring fg-loading-ring-inner" />
+            <div className="fg-loading-core">✈</div>
+          </div>
+
+          <p className="fg-kicker mt-2 text-xs font-semibold uppercase">TravelTogether</p>
+          <h2 className="fg-title mt-4 text-3xl font-bold">Mapping your next adventure</h2>
           <p className="fg-muted mt-3 text-sm">
-            Loading your profile, trips, and travel feed...
+            Loading your profile, trips, reviews, and community feed...
           </p>
+
+          <div className="fg-loading-progress mt-6" aria-hidden="true">
+            <span className="fg-loading-progress-bar" />
+          </div>
+
+          <div className="mt-6 grid grid-cols-3 gap-3 text-left">
+            {[
+              "Syncing profile",
+              "Fetching trips",
+              "Preparing feed",
+            ].map((label) => (
+              <div key={label} className="fg-loading-pill">
+                <span className="fg-loading-pill-dot" />
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );

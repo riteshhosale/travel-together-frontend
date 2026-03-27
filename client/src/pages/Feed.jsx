@@ -1,10 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import EmptyState from "../components/EmptyState";
 import Footer from "../components/Footer";
 import SectionHeader from "../components/SectionHeader";
 import { apiFetch } from "../services/apiFetch";
+import { notify } from "../services/notify";
+
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80";
+
+const resolveImageUrl = (image) => {
+  if (!image) return "";
+
+  const trimmed = String(image).trim();
+
+  if (!trimmed) return "";
+
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) {
+    return trimmed;
+  }
+
+  const backendBase = (
+    process.env.REACT_APP_API_URL ||
+    "https://travel-together-backend.onrender.com"
+  ).replace(/\/+$/, "");
+
+  if (trimmed.startsWith("/uploads/")) {
+    return `${backendBase}${trimmed}`;
+  }
+
+  if (trimmed.startsWith("uploads/")) {
+    return `${backendBase}/${trimmed}`;
+  }
+
+  return trimmed;
+};
 
 function Feed() {
   const [searchParams] = useSearchParams();
@@ -13,9 +44,16 @@ function Feed() {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageLoadErrors, setImageLoadErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  const previewUrl = useMemo(() => {
+    if (imagePreview) return imagePreview;
+    return resolveImageUrl(image);
+  }, [image, imagePreview]);
 
   const loadFeed = async () => {
     try {
@@ -35,9 +73,20 @@ function Feed() {
     loadFeed();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
   const createPost = async () => {
     if (!image && !imageFile && !caption) {
-      alert("Please add an image file, image URL, or caption.");
+      notify({
+        message: "Please add an image file, image URL, or caption.",
+        type: "error",
+      });
       return;
     }
 
@@ -64,8 +113,16 @@ function Feed() {
       setCaption("");
       setImage("");
       setImageFile(null);
+      setImageLoadErrors({});
+
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+        setImagePreview("");
+      }
+
+      notify({ message: "Travel update posted.", type: "success" });
     } catch (err) {
-      alert(err?.message || "Failed to post");
+      notify({ message: err?.message || "Failed to post", type: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -94,7 +151,14 @@ function Feed() {
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files && e.target.files[0];
+
+                  if (imagePreview) {
+                    URL.revokeObjectURL(imagePreview);
+                  }
+
                   setImageFile(file || null);
+                  setImage(file ? "" : image);
+                  setImagePreview(file ? URL.createObjectURL(file) : "");
                 }}
                 className="fg-input mt-2 text-sm"
               />
@@ -103,7 +167,16 @@ function Feed() {
               <label className="fg-muted text-xs font-semibold">Image URL</label>
               <input
                 value={image}
-                onChange={(e) => setImage(e.target.value)}
+                onChange={(e) => {
+                  setImage(e.target.value);
+                  if (imagePreview) {
+                    URL.revokeObjectURL(imagePreview);
+                    setImagePreview("");
+                  }
+                  if (imageFile) {
+                    setImageFile(null);
+                  }
+                }}
                 placeholder="https://..."
                 className="fg-input mt-2 text-sm"
               />
@@ -118,6 +191,22 @@ function Feed() {
               />
             </div>
           </div>
+
+          {previewUrl && (
+            <div className="fg-card mt-4 overflow-hidden p-3">
+              <p className="fg-muted mb-3 text-xs font-semibold uppercase tracking-[0.22em]">
+                Preview
+              </p>
+              <img
+                src={previewUrl}
+                alt="Post preview"
+                className="h-56 w-full rounded-2xl object-cover"
+                onError={(event) => {
+                  event.currentTarget.src = FALLBACK_IMAGE;
+                }}
+              />
+            </div>
+          )}
 
           <button
             onClick={createPost}
@@ -146,25 +235,39 @@ function Feed() {
           />
         ) : (
           <div className="space-y-6">
-            {posts.map((post) => (
-              <div key={post._id} className="fg-card p-6">
-                {post.image && (
+            {posts.map((post) => {
+              const postImage = imageLoadErrors[post._id]
+                ? FALLBACK_IMAGE
+                : resolveImageUrl(post.image) || FALLBACK_IMAGE;
+
+              return (
+                <div key={post._id} className="fg-card overflow-hidden p-6">
                   <img
-                    src={post.image}
+                    src={postImage}
                     alt={post.caption || "Travel update"}
                     className="h-64 w-full rounded-xl object-cover"
+                    onError={() => {
+                      setImageLoadErrors((prev) => ({ ...prev, [post._id]: true }));
+                    }}
                   />
-                )}
-                <div className="mt-4">
-                  <p className="fg-title text-sm font-semibold">
-                    {post.user?.name || "Traveler"}
-                  </p>
-                  <p className="fg-muted mt-2 text-sm">
-                    {post.caption || "Shared a travel update."}
-                  </p>
+                  <div className="mt-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <p className="fg-title text-sm font-semibold">
+                        {post.user?.name || "Traveler"}
+                      </p>
+                      <span className="fg-chip text-[11px] font-semibold uppercase tracking-wide">
+                        {post.createdAt
+                          ? new Date(post.createdAt).toLocaleDateString()
+                          : "Recent"}
+                      </span>
+                    </div>
+                    <p className="fg-muted mt-2 text-sm">
+                      {post.caption || "Shared a travel update."}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
         <Footer />
