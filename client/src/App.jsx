@@ -82,7 +82,22 @@ function App() {
   }, []);
 
   if (isAuthenticated() && isUserLoading && !user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fg-page flex min-h-screen items-center justify-center px-6">
+        <div className="fg-orb fg-orb-1" />
+        <div className="fg-orb fg-orb-2" />
+        <div className="fg-orb fg-orb-3" />
+
+        <div className="fg-card fg-loading-shell relative z-10 w-full max-w-md p-8 text-center">
+          <div className="fg-loading-spinner mx-auto" />
+          <p className="fg-kicker text-xs font-semibold uppercase">TravelTogether</p>
+          <h2 className="fg-title mt-4 text-2xl font-bold">Getting your trip space ready</h2>
+          <p className="fg-muted mt-3 text-sm">
+            Loading your profile, trips, and travel feed...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
