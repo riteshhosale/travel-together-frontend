@@ -21,6 +21,13 @@ function Trips() {
     return 0;
   }, []);
 
+  const formatTripDate = useCallback((value) => {
+    if (!value) return "--";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return String(value);
+    return parsed.toLocaleDateString();
+  }, []);
+
   const fetchMemberCount = useCallback(
     async (tripId) => {
       try {
@@ -124,7 +131,7 @@ function Trips() {
                   </div>
 
                   <div className="fg-muted mt-5 flex flex-wrap gap-2 text-xs font-semibold">
-                    <span className="fg-chip">Date: {trip.date}</span>
+                    <span className="fg-chip">Date: {formatTripDate(trip.date)}</span>
                     <span className="fg-chip">Budget: {trip.budget || "Flexible"}</span>
                     <span className="fg-chip">
                       Members: {memberCount ?? "--"}

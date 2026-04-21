@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import BackButton from "../components/BackButton";
 import EmptyState from "../components/EmptyState";
 import Footer from "../components/Footer";
@@ -18,6 +18,13 @@ function Reviews() {
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const formatTripDate = useCallback((value) => {
+    if (!value) return "--";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return String(value);
+    return parsed.toLocaleDateString();
+  }, []);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -195,7 +202,7 @@ function Reviews() {
                     {selectedTrip.destination}
                   </h3>
                   <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
-                    <span className="fg-chip">Date: {selectedTrip.date}</span>
+                    <span className="fg-chip">Date: {formatTripDate(selectedTrip.date)}</span>
                     <span className="fg-chip">
                       Budget: {selectedTrip.budget || "Flexible"}
                     </span>

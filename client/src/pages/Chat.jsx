@@ -49,6 +49,13 @@ function Chat() {
     return 0;
   }, []);
 
+  const formatTripDate = useCallback((value) => {
+    if (!value) return "--";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return String(value);
+    return parsed.toLocaleDateString();
+  }, []);
+
   const loadMemberCount = useCallback(
     async (selectedTripId) => {
       try {
@@ -236,7 +243,7 @@ function Chat() {
               </option>
               {trips.map((trip) => (
                 <option key={trip._id} value={trip._id}>
-                  {trip.destination} ({trip.date})
+                  {trip.destination} ({formatTripDate(trip.date)})
                 </option>
               ))}
             </select>
