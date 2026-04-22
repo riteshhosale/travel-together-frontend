@@ -3,10 +3,13 @@ import { clearToken, getToken } from "./auth";
 
 const normalizeBase = (base) => base.replace(/\/+$/, "");
 
+const getDefaultApiBase = () =>
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://travel-together-backend.onrender.com";
+
 const resolveBaseUrl = () => {
-  const rawBase =
-    process.env.REACT_APP_API_URL ||
-    "https://travel-together-backend.onrender.com";
+  const rawBase = process.env.REACT_APP_API_URL || getDefaultApiBase();
   const base = normalizeBase(rawBase);
 
   return base.endsWith("/api") ? base : `${base}/api`;

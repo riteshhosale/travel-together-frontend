@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
@@ -9,24 +9,86 @@ function AI() {
   const [searchParams] = useSearchParams();
   const requestedFeature = searchParams.get("feature") || "TravelGPT Assistant";
   const [destination, setDestination] = useState("");
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      role: "assistant",
+      content:
+        "Hi, I am TravelGPT. Ask me anything about planning trips, visas, budgets, itineraries, and packing.",
+    },
+  ]);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatContainerRef = useRef(null);
 
-  const mode = useMemo(
-    () => (requestedFeature.toLowerCase().includes("luggage") ? "luggage" : "trip-plan"),
-    [requestedFeature],
-  );
+  const mode = useMemo(() => {
+    const feature = requestedFeature.toLowerCase();
 
-  const title = mode === "luggage" ? "AI Luggage Manager" : "TravelGPT Assistant";
-  const buttonText = mode === "luggage" ? "Generate checklist" : "Generate plan";
+    if (feature.includes("luggage")) {
+      return "luggage";
+    }
+
+    return "chat";
+  }, [requestedFeature]);
+
+  const title = mode === "luggage" ? "AI Luggage Manager" : "TravelGPT Chat";
+  const buttonText = mode === "luggage" ? "Generate checklist" : "Send";
   const promptIdeas =
     mode === "luggage"
       ? ["Goa", "Manali", "Shimla", "Kerala"]
-      : ["Goa", "Jaipur", "Udaipur", "Manali"];
+      : [
+          "Plan a 3-day Goa trip under 20k INR",
+          "Best places in Himachal for April",
+          "What to pack for Thailand in monsoon",
+          "Budget itinerary for Jaipur and Udaipur",
+        ];
+
+  const scrollChatToBottom = () => {
+    if (!chatContainerRef.current) {
+      return;
+    }
+
+    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (mode === "chat") {
+      const userMessage = chatInput.trim();
+
+      if (!userMessage || chatLoading) {
+        return;
+      }
+
+      const nextMessages = [...chatMessages, { role: "user", content: userMessage }];
+
+      setChatMessages(nextMessages);
+      setChatInput("");
+      setError("");
+      setChatLoading(true);
+
+      setTimeout(scrollChatToBottom, 0);
+
+      try {
+        const data = await apiFetch("/ai/chat", {
+          method: "POST",
+          body: JSON.stringify({ messages: nextMessages }),
+        });
+
+        setChatMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      } catch (err) {
+        setError(err?.message || "Failed to fetch AI response");
+      } finally {
+        setChatLoading(false);
+        setTimeout(scrollChatToBottom, 0);
+      }
+
+      return;
+    }
+
     setLoading(true);
     setError("");
     setResult(null);
@@ -64,25 +126,85 @@ function AI() {
             <p className="fg-muted mt-5 max-w-3xl text-base sm:text-lg">
               {mode === "luggage"
                 ? "Get a quick, destination-based packing checklist so you forget less and travel lighter."
-                : "Ask for a quick travel plan and get a simple day-wise outline for your destination."}
+                : "Chat with TravelGPT in real time to plan destinations, costs, routes, and practical travel decisions."}
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-8 grid gap-4 sm:grid-cols-[1fr_auto]">
-              <input
-                type="text"
-                value={destination}
-                onChange={(event) => setDestination(event.target.value)}
-                placeholder={mode === "luggage" ? "Enter destination for packing list" : "Enter destination for travel plan"}
-                className="fg-input"
-              />
-              <button
-                type="submit"
-                disabled={loading || !destination.trim()}
-                className="fg-btn-primary text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {loading ? "Loading..." : buttonText}
-              </button>
-            </form>
+            {mode === "chat" ? (
+              <>
+                <div
+                  ref={chatContainerRef}
+                  className="fg-card mt-8 h-[420px] overflow-y-auto p-4 sm:p-6"
+                >
+                  <div className="space-y-4">
+                    {chatMessages.map((message, index) => {
+                      const isUser = message.role === "user";
+
+                      return (
+                        <div
+                          key={`${message.role}-${index}`}
+                          className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                        >
+                          <div
+                            className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-7 ${
+                              isUser
+                                ? "bg-sky-400/20 border border-sky-300/25 text-sky-100"
+                                : "bg-slate-800/75 border border-slate-500/25 fg-muted"
+                            }`}
+                          >
+                            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em]">
+                              {isUser ? "You" : "TravelGPT"}
+                            </p>
+                            <p className="whitespace-pre-wrap">{message.content}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {chatLoading && (
+                      <div className="flex justify-start">
+                        <div className="max-w-[85%] rounded-2xl border border-slate-500/25 bg-slate-800/75 px-4 py-3 text-sm fg-muted">
+                          TravelGPT is thinking...
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto]">
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(event) => setChatInput(event.target.value)}
+                    placeholder="Ask anything about your trip"
+                    className="fg-input"
+                  />
+                  <button
+                    type="submit"
+                    disabled={chatLoading || !chatInput.trim()}
+                    className="fg-btn-primary text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {chatLoading ? "Sending..." : buttonText}
+                  </button>
+                </form>
+              </>
+            ) : (
+              <form onSubmit={handleSubmit} className="mt-8 grid gap-4 sm:grid-cols-[1fr_auto]">
+                <input
+                  type="text"
+                  value={destination}
+                  onChange={(event) => setDestination(event.target.value)}
+                  placeholder="Enter destination for packing list"
+                  className="fg-input"
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !destination.trim()}
+                  className="fg-btn-primary text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {loading ? "Loading..." : buttonText}
+                </button>
+              </form>
+            )}
 
             <div className="mt-5 flex flex-wrap gap-3">
               {promptIdeas.map((idea) => (
@@ -90,7 +212,13 @@ function AI() {
                   key={idea}
                   type="button"
                   className="fg-btn-secondary text-xs"
-                  onClick={() => setDestination(idea)}
+                  onClick={() => {
+                    if (mode === "chat") {
+                      setChatInput(idea);
+                    } else {
+                      setDestination(idea);
+                    }
+                  }}
                 >
                   {idea}
                 </button>
@@ -99,7 +227,7 @@ function AI() {
 
             {error && <div className="fg-alert mt-6 px-4 py-3 text-sm">{error}</div>}
 
-            {result && (
+            {result && mode === "luggage" && (
               <div className="fg-card mt-6 p-6">
                 {result.destination && (
                   <p className="fg-muted text-sm">Destination: {result.destination}</p>
