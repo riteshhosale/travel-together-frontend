@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import Footer from "../components/Footer";
-import { notify } from "../services/notify";
+import { useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import Footer from '../components/Footer';
+import { notify } from '../services/notify';
 
 function Register() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const featureName = searchParams.get("feature") || "Create Account";
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const featureName = searchParams.get('feature') || 'Create Account';
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const register = async () => {
     if (!name || !email || !password) {
       notify({
-        message: "Name, email, and password are required.",
-        type: "error",
+        message: 'Name, email, and password are required.',
+        type: 'error',
       });
       return;
     }
@@ -27,15 +27,14 @@ function Register() {
       setIsSubmitting(true);
 
       const rawBase =
-        process.env.REACT_APP_API_URL ||
-        "https://travel-together-backend.onrender.com";
-      const base = rawBase.replace(/\/+$/, "");
-      const apiBase = base.endsWith("/api") ? base : `${base}/api`;
+        process.env.REACT_APP_API_URL || 'https://travel-together-backend.onrender.com';
+      const base = rawBase.replace(/\/+$/, '');
+      const apiBase = base.endsWith('/api') ? base : `${base}/api`;
 
       const response = await fetch(`${apiBase}/auth/register`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name,
@@ -48,15 +47,15 @@ function Register() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || "Registration failed. Try again.");
+        throw new Error(data?.message || 'Registration failed. Try again.');
       }
 
-      notify({ message: "Account created. Please login.", type: "success" });
-      navigate("/login");
+      notify({ message: 'Account created. Please login.', type: 'success' });
+      navigate('/login');
     } catch (err) {
       notify({
-        message: err?.message || "Registration failed. Try again.",
-        type: "error",
+        message: err?.message || 'Registration failed. Try again.',
+        type: 'error',
       });
     } finally {
       setIsSubmitting(false);
@@ -64,82 +63,70 @@ function Register() {
   };
 
   return (
-    <div className="fg-page min-h-screen px-4 py-10 sm:py-12">
-      <div className="fg-orb fg-orb-1" aria-hidden="true" />
-      <div className="fg-orb fg-orb-2" aria-hidden="true" />
-      <div className="fg-page-content mx-auto w-full max-w-6xl fg-rise">
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_1fr] lg:items-center">
-          <section className="fg-card p-6 sm:p-8">
-            <div className="mb-6">
-              <p className="fg-kicker text-xs font-semibold uppercase">
-                {featureName}
-              </p>
-              <h2 className="fg-title mt-3 text-3xl font-bold">
-                Create your account
-              </h2>
-              <p className="fg-muted mt-2 text-sm">
-                Join a more polished travel platform built for matching,
-                planning, and better trip coordination.
+    <div className='fg-page min-h-screen px-4 py-10 sm:py-12'>
+      <div className='fg-orb fg-orb-1' aria-hidden='true' />
+      <div className='fg-orb fg-orb-2' aria-hidden='true' />
+      <div className='fg-page-content mx-auto w-full max-w-6xl fg-rise'>
+        <div className='grid gap-8 lg:grid-cols-[0.95fr_1fr] lg:items-center'>
+          <section className='fg-card p-6 sm:p-8'>
+            <div className='mb-6'>
+              <p className='fg-kicker text-xs font-semibold uppercase'>{featureName}</p>
+              <h2 className='fg-title mt-3 text-3xl font-bold'>Create your account</h2>
+              <p className='fg-muted mt-2 text-sm'>
+                Join a more polished travel platform built for matching, planning, and better trip
+                coordination.
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <label className="fg-muted text-xs font-semibold">
-                  Full name
-                </label>
+            <div className='grid gap-4 sm:grid-cols-2'>
+              <div className='sm:col-span-2'>
+                <label className='fg-muted text-xs font-semibold'>Full name</label>
                 <input
-                  placeholder="Jane Doe"
+                  placeholder='Jane Doe'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="fg-input mt-2 text-sm"
+                  className='fg-input mt-2 text-sm'
                 />
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="fg-muted text-xs font-semibold">
-                  Email address
-                </label>
+              <div className='sm:col-span-2'>
+                <label className='fg-muted text-xs font-semibold'>Email address</label>
                 <input
-                  placeholder="you@example.com"
-                  type="email"
+                  placeholder='you@example.com'
+                  type='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="fg-input mt-2 text-sm"
+                  className='fg-input mt-2 text-sm'
                 />
               </div>
 
               <div>
-                <label className="fg-muted text-xs font-semibold">
-                  Password
-                </label>
-                <div className="mt-2 flex gap-2">
+                <label className='fg-muted text-xs font-semibold'>Password</label>
+                <div className='mt-2 flex gap-2'>
                   <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder='••••••••'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="fg-input text-sm"
+                    className='fg-input text-sm'
                   />
                   <button
-                    type="button"
+                    type='button'
                     onClick={() => setShowPassword((value) => !value)}
-                    className="fg-btn-secondary whitespace-nowrap text-xs"
+                    className='fg-btn-secondary whitespace-nowrap text-xs'
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="fg-muted text-xs font-semibold">
-                  Home base
-                </label>
+                <label className='fg-muted text-xs font-semibold'>Home base</label>
                 <input
-                  placeholder="City, Country"
+                  placeholder='City, Country'
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="fg-input mt-2 text-sm"
+                  className='fg-input mt-2 text-sm'
                 />
               </div>
             </div>
@@ -147,40 +134,38 @@ function Register() {
             <button
               onClick={register}
               disabled={isSubmitting}
-              className="fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+              className='fg-btn-primary mt-6 w-full text-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70'
             >
-              {isSubmitting ? "Creating account..." : "Register"}
+              {isSubmitting ? 'Creating account...' : 'Register'}
             </button>
 
-            <p className="fg-muted mt-5 text-center text-sm">
-              Already have an account?{" "}
-              <Link to="/login" className="fg-title font-semibold">
+            <p className='fg-muted mt-5 text-center text-sm'>
+              Already have an account?{' '}
+              <Link to='/login' className='fg-title font-semibold'>
                 Sign in
               </Link>
             </p>
           </section>
 
-          <section className="fg-section">
-            <p className="fg-kicker text-xs font-semibold uppercase">
-              Why join
-            </p>
-            <h1 className="fg-title mt-4 text-4xl font-black sm:text-5xl">
+          <section className='fg-section'>
+            <p className='fg-kicker text-xs font-semibold uppercase'>Why join</p>
+            <h1 className='fg-title mt-4 text-4xl font-black sm:text-5xl'>
               Build better trips with better structure.
             </h1>
-            <p className="fg-muted mt-5 max-w-xl text-sm leading-7 sm:text-base">
-              TravelTogether helps you move from rough ideas to real plans with
-              cleaner discovery, stronger trip collaboration, and an interface
-              that feels more trustworthy from the start.
+            <p className='fg-muted mt-5 max-w-xl text-sm leading-7 sm:text-base'>
+              TravelTogether helps you move from rough ideas to real plans with cleaner discovery,
+              stronger trip collaboration, and an interface that feels more trustworthy from the
+              start.
             </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className='mt-8 grid gap-4 sm:grid-cols-3'>
               {[
-                "Create and discover trips faster",
-                "Use reviews and chat to plan with confidence",
-                "Get AI help without leaving the platform",
+                'Create and discover trips faster',
+                'Use reviews and chat to plan with confidence',
+                'Get AI help without leaving the platform',
               ].map((item) => (
-                <div key={item} className="fg-card p-4">
-                  <p className="fg-muted text-sm">{item}</p>
+                <div key={item} className='fg-card p-4'>
+                  <p className='fg-muted text-sm'>{item}</p>
                 </div>
               ))}
             </div>

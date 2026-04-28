@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const useLocalStorage = (key, initialValue) => {
   const getInitialValue = () => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return initialValue;
     }
 
@@ -17,7 +17,7 @@ export const useLocalStorage = (key, initialValue) => {
   const [value, setValue] = useState(getInitialValue);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return;
     }
 

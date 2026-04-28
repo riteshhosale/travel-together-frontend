@@ -1,12 +1,12 @@
-import { createContext, useContext, useMemo } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { createContext, useContext, useMemo } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const AppContext = createContext(null);
 
 export const AppProvider = ({ children }) => {
-  const [preferences, setPreferences] = useLocalStorage("fg.preferences", {
-    preferredBudget: "",
-    preferredDestination: "",
+  const [preferences, setPreferences] = useLocalStorage('fg.preferences', {
+    preferredBudget: '',
+    preferredDestination: '',
     reducedMotion: false,
   });
 
@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
       preferences,
       setPreferences,
     }),
-    [preferences, setPreferences],
+    [preferences, setPreferences]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -25,7 +25,7 @@ export const useAppContext = () => {
   const context = useContext(AppContext);
 
   if (!context) {
-    throw new Error("useAppContext must be used inside AppProvider");
+    throw new Error('useAppContext must be used inside AppProvider');
   }
 
   return context;
