@@ -10,12 +10,16 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [location, setLocation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const register = async () => {
     if (!name || !email || !password) {
-      notify({ message: "Name, email, and password are required.", type: "error" });
+      notify({
+        message: "Name, email, and password are required.",
+        type: "error",
+      });
       return;
     }
 
@@ -50,7 +54,10 @@ function Register() {
       notify({ message: "Account created. Please login.", type: "success" });
       navigate("/login");
     } catch (err) {
-      notify({ message: err?.message || "Registration failed. Try again.", type: "error" });
+      notify({
+        message: err?.message || "Registration failed. Try again.",
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -64,16 +71,23 @@ function Register() {
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1fr] lg:items-center">
           <section className="fg-card p-6 sm:p-8">
             <div className="mb-6">
-              <p className="fg-kicker text-xs font-semibold uppercase">{featureName}</p>
-              <h2 className="fg-title mt-3 text-3xl font-bold">Create your account</h2>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                {featureName}
+              </p>
+              <h2 className="fg-title mt-3 text-3xl font-bold">
+                Create your account
+              </h2>
               <p className="fg-muted mt-2 text-sm">
-                Join a more polished travel platform built for matching, planning, and better trip coordination.
+                Join a more polished travel platform built for matching,
+                planning, and better trip coordination.
               </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="fg-muted text-xs font-semibold">Full name</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Full name
+                </label>
                 <input
                   placeholder="Jane Doe"
                   value={name}
@@ -83,7 +97,9 @@ function Register() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="fg-muted text-xs font-semibold">Email address</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Email address
+                </label>
                 <input
                   placeholder="you@example.com"
                   type="email"
@@ -94,18 +110,31 @@ function Register() {
               </div>
 
               <div>
-                <label className="fg-muted text-xs font-semibold">Password</label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="fg-input mt-2 text-sm"
-                />
+                <label className="fg-muted text-xs font-semibold">
+                  Password
+                </label>
+                <div className="mt-2 flex gap-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="fg-input text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((value) => !value)}
+                    className="fg-btn-secondary whitespace-nowrap text-xs"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
               </div>
 
               <div>
-                <label className="fg-muted text-xs font-semibold">Home base</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Home base
+                </label>
                 <input
                   placeholder="City, Country"
                   value={location}
@@ -124,7 +153,7 @@ function Register() {
             </button>
 
             <p className="fg-muted mt-5 text-center text-sm">
-              Already have an account? {" "}
+              Already have an account?{" "}
               <Link to="/login" className="fg-title font-semibold">
                 Sign in
               </Link>
@@ -132,14 +161,16 @@ function Register() {
           </section>
 
           <section className="fg-section">
-            <p className="fg-kicker text-xs font-semibold uppercase">Why join</p>
+            <p className="fg-kicker text-xs font-semibold uppercase">
+              Why join
+            </p>
             <h1 className="fg-title mt-4 text-4xl font-black sm:text-5xl">
               Build better trips with better structure.
             </h1>
             <p className="fg-muted mt-5 max-w-xl text-sm leading-7 sm:text-base">
-              TravelTogether helps you move from rough ideas to real plans with cleaner
-              discovery, stronger trip collaboration, and an interface that feels more
-              trustworthy from the start.
+              TravelTogether helps you move from rough ideas to real plans with
+              cleaner discovery, stronger trip collaboration, and an interface
+              that feels more trustworthy from the start.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">

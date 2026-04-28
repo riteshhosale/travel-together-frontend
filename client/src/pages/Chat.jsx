@@ -36,15 +36,12 @@ function Chat() {
 
   const token = getToken();
 
-  const getMemberCount = useCallback((payload) => {
-    if (Array.isArray(payload)) {
-      return payload.length;
+  const getTripMemberCount = useCallback((trip) => {
+    if (trip && typeof trip.joinedCount === "number") {
+      return trip.joinedCount;
     }
-    if (payload && Array.isArray(payload.members)) {
-      return payload.members.length;
-    }
-    if (payload && typeof payload.count === "number") {
-      return payload.count;
+    if (trip && Array.isArray(trip.members)) {
+      return trip.members.length;
     }
     return 0;
   }, []);
@@ -55,20 +52,6 @@ function Chat() {
     if (Number.isNaN(parsed.getTime())) return String(value);
     return parsed.toLocaleDateString();
   }, []);
-
-  const loadMemberCount = useCallback(
-    async (selectedTripId) => {
-      try {
-        const data = await apiFetch(`/trips/${selectedTripId}/members`);
-        const count = getMemberCount(data);
-        setMemberCounts((prev) => ({ ...prev, [selectedTripId]: count }));
-        return count;
-      } catch (err) {
-        return null;
-      }
-    },
-    [getMemberCount],
-  );
 
   useEffect(() => {
     if (!token) {
@@ -125,9 +108,13 @@ function Chat() {
       try {
         setIsLoadingTrips(true);
         const data = await apiFetch("/trips");
-        setTrips(data || []);
-        await Promise.all(
-          (data || []).map((trip) => loadMemberCount(trip._id)),
+        const safeTrips = Array.isArray(data) ? data : [];
+        setTrips(safeTrips);
+        setMemberCounts(
+          safeTrips.reduce((acc, trip) => {
+            acc[trip._id] = getTripMemberCount(trip);
+            return acc;
+          }, {}),
         );
       } catch (err) {
         setError(err?.message || "Failed to load trips");
@@ -137,7 +124,7 @@ function Chat() {
     };
 
     loadTrips();
-  }, [loadMemberCount, token]);
+  }, [getTripMemberCount, token]);
 
   const loadMessages = async (selectedTripId) => {
     try {
@@ -162,9 +149,23 @@ function Chat() {
 
     try {
       setError("");
-      await apiFetch(`/trips/join/${normalizedTripId}`, {
+      const joinResult = await apiFetch(`/trips/join/${normalizedTripId}`, {
         method: "POST",
       });
+
+      if (typeof joinResult?.joinedCount === "number") {
+        setMemberCounts((prev) => ({
+          ...prev,
+          [normalizedTripId]: joinResult.joinedCount,
+        }));
+        setTrips((prev) =>
+          prev.map((item) =>
+            item._id === normalizedTripId
+              ? { ...item, joinedCount: joinResult.joinedCount }
+              : item,
+          ),
+        );
+      }
     } catch (err) {
       const status = err?.status;
       if (status !== 400) {
@@ -175,7 +176,6 @@ function Chat() {
 
     socketRef.current.emit("joinTrip", normalizedTripId);
     setActiveTripId(normalizedTripId);
-    await loadMemberCount(normalizedTripId);
     await loadMessages(normalizedTripId);
   };
 

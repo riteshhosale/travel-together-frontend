@@ -36,6 +36,7 @@ function Profile() {
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
@@ -56,9 +57,9 @@ function Profile() {
     : "Recently joined";
   const profileStrength = Math.min(
     100,
-    [displayName, displayEmail, displayLocation, profile?.createdAt]
-      .filter(Boolean)
-      .length * 25,
+    [displayName, displayEmail, displayLocation, profile?.createdAt].filter(
+      Boolean,
+    ).length * 25,
   );
 
   useEffect(() => {
@@ -133,7 +134,10 @@ function Profile() {
       setPassword("");
       notify({ message: "Profile updated.", type: "success" });
     } catch (err) {
-      notify({ message: err?.message || "Failed to update profile", type: "error" });
+      notify({
+        message: err?.message || "Failed to update profile",
+        type: "error",
+      });
     } finally {
       setIsSaving(false);
     }
@@ -178,13 +182,15 @@ function Profile() {
             <div className="pointer-events-none absolute -bottom-24 left-16 h-56 w-56 rounded-full bg-sky-300/10 blur-3xl" />
             <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="fg-kicker text-xs font-semibold uppercase">Enterprise profile</p>
+                <p className="fg-kicker text-xs font-semibold uppercase">
+                  Enterprise profile
+                </p>
                 <h1 className="fg-title mt-3 text-3xl font-black sm:text-4xl">
                   Account Command Center
                 </h1>
                 <p className="fg-muted mt-3 max-w-2xl text-sm leading-7 sm:text-base">
-                  Manage identity, account trust, and travel readiness from one professional
-                  profile workspace.
+                  Manage identity, account trust, and travel readiness from one
+                  professional profile workspace.
                 </p>
               </div>
               <BackButton />
@@ -208,8 +214,12 @@ function Profile() {
                   </div>
                 )}
                 <div>
-                  <p className="fg-kicker text-xs font-semibold uppercase">Executive profile</p>
-                  <h2 className="fg-title mt-2 text-2xl font-bold">{displayName}</h2>
+                  <p className="fg-kicker text-xs font-semibold uppercase">
+                    Executive profile
+                  </p>
+                  <h2 className="fg-title mt-2 text-2xl font-bold">
+                    {displayName}
+                  </h2>
                   <p className="fg-muted mt-1 text-sm">{displayEmail}</p>
                 </div>
               </div>
@@ -228,10 +238,17 @@ function Profile() {
                       onChange={onImageChange}
                       className="hidden"
                     />
-                    <label htmlFor="profile-image-input" className="fg-btn-secondary cursor-pointer text-xs">
+                    <label
+                      htmlFor="profile-image-input"
+                      className="fg-btn-secondary cursor-pointer text-xs"
+                    >
                       Upload image
                     </label>
-                    <button type="button" onClick={onRemoveImage} className="fg-btn-secondary text-xs">
+                    <button
+                      type="button"
+                      onClick={onRemoveImage}
+                      className="fg-btn-secondary text-xs"
+                    >
                       Remove image
                     </button>
                   </div>
@@ -241,27 +258,37 @@ function Profile() {
                   <p className="fg-muted text-xs font-semibold uppercase tracking-[0.22em]">
                     Account status
                   </p>
-                  <p className="fg-title mt-2 text-sm font-semibold">Active and verified</p>
-                  <p className="fg-muted mt-1 text-xs">Last policy sync: just now</p>
+                  <p className="fg-title mt-2 text-sm font-semibold">
+                    Active and verified
+                  </p>
+                  <p className="fg-muted mt-1 text-xs">
+                    Last policy sync: just now
+                  </p>
                 </div>
                 <div className="fg-card p-4">
                   <p className="fg-muted text-xs font-semibold uppercase tracking-[0.22em]">
                     Home base
                   </p>
-                  <p className="fg-title mt-2 text-sm font-semibold">{displayLocation}</p>
+                  <p className="fg-title mt-2 text-sm font-semibold">
+                    {displayLocation}
+                  </p>
                 </div>
                 <div className="fg-card p-4">
                   <p className="fg-muted text-xs font-semibold uppercase tracking-[0.22em]">
                     Member since
                   </p>
-                  <p className="fg-title mt-2 text-sm font-semibold">{memberSince}</p>
+                  <p className="fg-title mt-2 text-sm font-semibold">
+                    {memberSince}
+                  </p>
                 </div>
                 <div className="fg-card p-4">
                   <div className="flex items-center justify-between">
                     <p className="fg-muted text-xs font-semibold uppercase tracking-[0.22em]">
                       Profile strength
                     </p>
-                    <p className="fg-title text-sm font-bold">{profileStrength}%</p>
+                    <p className="fg-title text-sm font-bold">
+                      {profileStrength}%
+                    </p>
                   </div>
                   <div className="mt-3 h-2 rounded-full bg-slate-700/60">
                     <div
@@ -276,8 +303,8 @@ function Profile() {
             <div className="fg-card p-6">
               <p className="fg-title text-lg font-bold">Trust and visibility</p>
               <p className="fg-muted mt-3 text-sm leading-7">
-                Complete profiles are ranked better in discovery surfaces and improve
-                acceptance rates for shared itineraries.
+                Complete profiles are ranked better in discovery surfaces and
+                improve acceptance rates for shared itineraries.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className="fg-chip">Identity aligned</span>
@@ -290,28 +317,42 @@ function Profile() {
           <section className="fg-section">
             <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="fg-kicker text-xs font-semibold uppercase">Account settings</p>
-                <h2 className="fg-title mt-4 text-4xl font-black">Profile administration</h2>
+                <p className="fg-kicker text-xs font-semibold uppercase">
+                  Account settings
+                </p>
+                <h2 className="fg-title mt-4 text-4xl font-black">
+                  Profile administration
+                </h2>
                 <p className="fg-muted mt-3 max-w-xl text-sm leading-7 sm:text-base">
-                  Keep records accurate to maintain a trusted presence and ensure clean
-                  handoffs across travel planning workflows.
+                  Keep records accurate to maintain a trusted presence and
+                  ensure clean handoffs across travel planning workflows.
                 </p>
               </div>
             </div>
 
-            {error && <div className="fg-alert mb-6 px-4 py-3 text-sm">{error}</div>}
+            {error && (
+              <div className="fg-alert mb-6 px-4 py-3 text-sm">{error}</div>
+            )}
 
             <div className="mb-6 grid gap-4 sm:grid-cols-3">
               <div className="fg-card p-4">
-                <p className="fg-muted text-xs uppercase tracking-[0.22em]">Region</p>
-                <p className="fg-title mt-2 text-lg font-bold">{displayLocation}</p>
+                <p className="fg-muted text-xs uppercase tracking-[0.22em]">
+                  Region
+                </p>
+                <p className="fg-title mt-2 text-lg font-bold">
+                  {displayLocation}
+                </p>
               </div>
               <div className="fg-card p-4">
-                <p className="fg-muted text-xs uppercase tracking-[0.22em]">Account tier</p>
+                <p className="fg-muted text-xs uppercase tracking-[0.22em]">
+                  Account tier
+                </p>
                 <p className="fg-title mt-2 text-lg font-bold">Professional</p>
               </div>
               <div className="fg-card p-4">
-                <p className="fg-muted text-xs uppercase tracking-[0.22em]">Security posture</p>
+                <p className="fg-muted text-xs uppercase tracking-[0.22em]">
+                  Security posture
+                </p>
                 <p className="fg-title mt-2 text-lg font-bold">Strong</p>
               </div>
             </div>
@@ -330,7 +371,9 @@ function Profile() {
                 </div>
 
                 <div>
-                  <label className="fg-muted text-xs font-semibold">Email</label>
+                  <label className="fg-muted text-xs font-semibold">
+                    Email
+                  </label>
                   <input
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -339,7 +382,9 @@ function Profile() {
                 </div>
 
                 <div>
-                  <label className="fg-muted text-xs font-semibold">Location</label>
+                  <label className="fg-muted text-xs font-semibold">
+                    Location
+                  </label>
                   <input
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
@@ -348,14 +393,25 @@ function Profile() {
                 </div>
 
                 <div>
-                  <label className="fg-muted text-xs font-semibold">New password</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Leave blank to keep current"
-                    className="fg-input mt-2 text-sm"
-                  />
+                  <label className="fg-muted text-xs font-semibold">
+                    New password
+                  </label>
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Leave blank to keep current"
+                      className="fg-input text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((value) => !value)}
+                      className="fg-btn-secondary whitespace-nowrap text-xs"
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

@@ -9,12 +9,16 @@ function Login() {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const redirectTo = location.state?.from || "/";
 
   const login = async () => {
     if (!email || !password) {
-      notify({ message: "Please enter both email and password.", type: "error" });
+      notify({
+        message: "Please enter both email and password.",
+        type: "error",
+      });
       return;
     }
 
@@ -45,7 +49,10 @@ function Login() {
       notify({ message: "Login successful", type: "success" });
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      notify({ message: err?.message || "Login failed. Try again.", type: "error" });
+      notify({
+        message: err?.message || "Login failed. Try again.",
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -58,13 +65,15 @@ function Login() {
       <div className="fg-page-content mx-auto w-full max-w-6xl fg-rise">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.95fr] lg:items-center">
           <section className="fg-section">
-            <p className="fg-kicker text-xs font-semibold uppercase">Welcome back</p>
+            <p className="fg-kicker text-xs font-semibold uppercase">
+              Welcome back
+            </p>
             <h1 className="fg-title mt-4 text-4xl font-black sm:text-5xl">
               Sign in and continue planning like a pro.
             </h1>
             <p className="fg-muted mt-5 max-w-xl text-sm leading-7 sm:text-base">
-              Access your trips, community feed, reviews, and travel tools from one
-              polished dashboard designed to make coordination easier.
+              Access your trips, community feed, reviews, and travel tools from
+              one polished dashboard designed to make coordination easier.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -82,16 +91,21 @@ function Login() {
 
           <section className="fg-card p-6 sm:p-8">
             <div className="mb-6">
-              <p className="fg-kicker text-xs font-semibold uppercase">Account access</p>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                Account access
+              </p>
               <h2 className="fg-title mt-3 text-3xl font-bold">Sign in</h2>
               <p className="fg-muted mt-2 text-sm">
-                Continue your journey with a cleaner, more professional workspace.
+                Continue your journey with a cleaner, more professional
+                workspace.
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="fg-muted text-xs font-semibold">Email address</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Email address
+                </label>
                 <input
                   placeholder="you@example.com"
                   type="email"
@@ -102,14 +116,25 @@ function Login() {
               </div>
 
               <div>
-                <label className="fg-muted text-xs font-semibold">Password</label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="fg-input mt-2 text-sm"
-                />
+                <label className="fg-muted text-xs font-semibold">
+                  Password
+                </label>
+                <div className="mt-2 flex gap-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="fg-input text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((value) => !value)}
+                    className="fg-btn-secondary whitespace-nowrap text-xs"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -122,7 +147,7 @@ function Login() {
             </button>
 
             <p className="fg-muted mt-5 text-center text-sm">
-              New here? {" "}
+              New here?{" "}
               <Link to="/register" className="fg-title font-semibold">
                 Create an account
               </Link>

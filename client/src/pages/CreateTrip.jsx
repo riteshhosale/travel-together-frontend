@@ -37,7 +37,10 @@ function CreateTrip() {
       notify({ message: "Trip created", type: "success" });
       navigate("/trips");
     } catch (err) {
-      notify({ message: err?.message || "Trip creation failed. Try again.", type: "error" });
+      notify({
+        message: err?.message || "Trip creation failed. Try again.",
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -52,11 +55,16 @@ function CreateTrip() {
           <section className="fg-section fg-rise">
             <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="fg-kicker text-xs font-semibold uppercase">New journey</p>
-                <h2 className="fg-title mt-4 text-4xl font-black">Create a trip</h2>
+                <p className="fg-kicker text-xs font-semibold uppercase">
+                  New journey
+                </p>
+                <h2 className="fg-title mt-4 text-4xl font-black">
+                  Create a trip
+                </h2>
                 <p className="fg-muted mt-3 max-w-xl text-sm leading-7 sm:text-base">
-                  Publish a trip that feels clear, structured, and credible so the right
-                  travelers can understand it quickly and decide with confidence.
+                  Publish a trip that feels clear, structured, and credible so
+                  the right travelers can understand it quickly and decide with
+                  confidence.
                 </p>
               </div>
               <BackButton />
@@ -64,7 +72,9 @@ function CreateTrip() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="fg-muted text-xs font-semibold">Destination</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Destination
+                </label>
                 <input
                   placeholder="Lisbon, Portugal"
                   value={destination}
@@ -97,7 +107,9 @@ function CreateTrip() {
               </div>
 
               <div>
-                <label className="fg-muted text-xs font-semibold">Max travelers</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Max travelers
+                </label>
                 <input
                   type="number"
                   min="1"
@@ -110,7 +122,9 @@ function CreateTrip() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="fg-muted text-xs font-semibold">Description</label>
+                <label className="fg-muted text-xs font-semibold">
+                  Description
+                </label>
                 <textarea
                   placeholder="What kind of trip is this? Share the vibe, plan, expectations, and who should join."
                   value={description}
@@ -131,13 +145,16 @@ function CreateTrip() {
 
           <aside className="space-y-6">
             <div className="fg-card p-6">
-              <p className="fg-kicker text-xs font-semibold uppercase">What good trips include</p>
+              <p className="fg-kicker text-xs font-semibold uppercase">
+                What good trips include
+              </p>
               <div className="mt-5 space-y-4">
                 {[
                   "A clear destination and realistic date",
                   "Budget expectations so travelers self-select better",
                   "A short description of travel style and purpose",
-                  "Group size so the trip feels more organized",
+                  "Group size limit to keep trips manageable",
+                  "Trip creator becomes admin with member management access",
                 ].map((item) => (
                   <div key={item} className="fg-card p-4">
                     <p className="fg-muted text-sm">{item}</p>
@@ -147,10 +164,23 @@ function CreateTrip() {
             </div>
 
             <div className="fg-card p-6">
-              <p className="fg-title text-lg font-bold">Professional posting tip</p>
+              <p className="fg-title text-lg font-bold">
+                Admin access & member management
+              </p>
               <p className="fg-muted mt-3 text-sm leading-7">
-                The more specific and clean your trip listing is, the easier it becomes for
-                the right people to trust it, join it, and coordinate smoothly afterward.
+                As the trip creator, you automatically become the trip admin.
+                You can:
+              </p>
+              <ul className="fg-muted mt-3 space-y-2 text-sm leading-7">
+                <li>• View all members who have joined your trip</li>
+                <li>• Set a maximum limit to control group size</li>
+                <li>
+                  • Prevent new people from joining once you reach max capacity
+                </li>
+              </ul>
+              <p className="fg-muted mt-4 text-sm leading-7">
+                Members can join, participate, and coordinate, but management
+                actions remain with you as the admin.
               </p>
             </div>
           </aside>
